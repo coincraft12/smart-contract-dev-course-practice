@@ -24,8 +24,8 @@ async function main() {
   console.log("\n✅ 배포 완료!");
   console.log("컨트랙트:", address);
 
-  if (network.name === "baseSepolia") {
-    console.log("Basescan :", `https://sepolia.basescan.org/address/${address}`);
+  if (network.name === "sepolia") {
+    console.log("Etherscan:", `https://sepolia.etherscan.io/address/${address}`);
   }
 
   console.log("\n토큰 정보:");

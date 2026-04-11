@@ -14,8 +14,8 @@
     "node": "hardhat node",
     "deploy:ch07:local": "hardhat run scripts/ch07/deploySimpleBank.ts --network localhost",
     "deploy:ch10:local": "hardhat run scripts/ch10/deployKRWCoin.ts --network localhost",
-    "deploy:ch07:testnet": "hardhat run scripts/ch07/deploySimpleBank.ts --network baseSepolia",
-    "deploy:ch10:testnet": "hardhat run scripts/ch10/deployKRWCoin.ts --network baseSepolia",
+    "deploy:ch07:testnet": "hardhat run scripts/ch07/deploySimpleBank.ts --network sepolia",
+    "deploy:ch10:testnet": "hardhat run scripts/ch10/deployKRWCoin.ts --network sepolia",
     "clean": "hardhat clean"
   },
   "devDependencies": {
