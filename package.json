@@ -1,0 +1,32 @@
+{
+  "name": "smart-contract-dev-course-practice",
+  "version": "1.0.0",
+  "description": "Solidity 스마트컨트랙트 개발 강좌 실습 코드",
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "test:gas": "REPORT_GAS=true hardhat test",
+    "test:ch04": "hardhat test test/ch04",
+    "test:ch06": "hardhat test test/ch06",
+    "test:ch07": "hardhat test test/ch07",
+    "test:ch08": "hardhat test test/ch08",
+    "test:ch10": "hardhat test test/ch10",
+    "node": "hardhat node",
+    "deploy:ch07:local": "hardhat run scripts/ch07/deploySimpleBank.ts --network localhost",
+    "deploy:ch10:local": "hardhat run scripts/ch10/deployKRWCoin.ts --network localhost",
+    "deploy:ch07:testnet": "hardhat run scripts/ch07/deploySimpleBank.ts --network baseSepolia",
+    "deploy:ch10:testnet": "hardhat run scripts/ch10/deployKRWCoin.ts --network baseSepolia",
+    "clean": "hardhat clean"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^3.0.0",
+    "hardhat": "^2.22.0",
+    "typescript": "^5.0.0",
+    "ts-node": "^10.9.0",
+    "@types/node": "^20.0.0",
+    "dotenv": "^16.0.0"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^5.0.0"
+  }
+}
