@@ -3,6 +3,8 @@ dotenv.config();
 
 import { HardhatUserConfig } from "hardhat/config";
 import "@nomicfoundation/hardhat-toolbox";
+import "@nomicfoundation/hardhat-ignition-ethers";
+import "@openzeppelin/hardhat-upgrades";
 
 const config: HardhatUserConfig = {
   solidity: {
@@ -12,6 +14,7 @@ const config: HardhatUserConfig = {
         enabled: true,
         runs: 200,
       },
+      evmVersion: "cancun",
     },
   },
   networks: {

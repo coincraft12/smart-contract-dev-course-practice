@@ -9,7 +9,7 @@ import { loadFixture } from "@nomicfoundation/hardhat-toolbox/network-helpers";
  * 1. VulnerableBank는 재진입 공격에 취약 → 공격 성공
  * 2. SafeBank는 동일한 공격에 방어됨 → 공격 실패
  */
-describe("Ch08 — Reentrancy Attack", function () {
+describe("Ch16 — Reentrancy Attack", function () {
 
   // ── VulnerableBank + Attacker ─────────────────────
   describe("VulnerableBank (취약한 컨트랙트)", function () {

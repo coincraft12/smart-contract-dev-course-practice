@@ -1,0 +1,9 @@
+{
+  "detectors_to_exclude": "naming-convention,solc-version,pragma,assembly",
+  "filter_paths": "node_modules,test,scripts,artifacts,cache",
+  "exclude_informational": false,
+  "exclude_low": false,
+  "solc_remaps": [
+    "@openzeppelin=node_modules/@openzeppelin"
+  ]
+}
