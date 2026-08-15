@@ -34,9 +34,11 @@ const config: HardhatUserConfig = {
     },
   },
   etherscan: {
-    apiKey: {
-      sepolia: process.env.ETHERSCAN_API_KEY || "",
-    },
+    // V2: 단일 apiKey (모든 체인 공통). 이전 per-network object 방식은 V1 endpoint 로 fallback.
+    apiKey: process.env.ETHERSCAN_API_KEY || "",
+  },
+  sourcify: {
+    enabled: false,  // Sourcify 검증 비활성 (Etherscan 검증만 사용)
   },
   gasReporter: {
     enabled: process.env.REPORT_GAS !== undefined,
