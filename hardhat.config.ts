@@ -39,7 +39,9 @@ const config: HardhatUserConfig = {
     currency: "USD",
   },
   paths: {
-    sources: "./contracts",
+    // CHAPTER env 지정 시 해당 챕터 폴더만 compile 대상 (강의 촬영용 · npm run compile:chXX).
+    // 미지정 시 전체 contracts/ 처리.
+    sources: process.env.CHAPTER ? `./contracts/${process.env.CHAPTER}` : "./contracts",
     tests: "./test",
     cache: "./cache",
     artifacts: "./artifacts",
