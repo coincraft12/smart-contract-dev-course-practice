@@ -2,14 +2,211 @@
 
 **coincraft.io 솔리디티 스마트컨트랙트 개발자 과정 · 수강생 실습 저장소** (Ch04~Ch21)
 
-## 시작하기
+이 저장소는 Hardhat 기반 Solidity 실습 프로젝트입니다. 강의에서 사용하는 모든 컨트랙트, 테스트, 배포 스크립트가 챕터별로 정리되어 있습니다.
+
+---
+
+## 목차
+
+1. [개발환경 요구사항](#개발환경-요구사항)
+2. [처음 시작하기](#처음-시작하기)
+3. [프로젝트 구조](#프로젝트-구조)
+4. [Hardhat 표준 명령어](#hardhat-표준-명령어)
+5. [package.json 편의 스크립트](#packagejson-편의-스크립트)
+6. [챕터별 실습 · 테스트](#챕터별-실습--테스트)
+7. [배포 (Sepolia)](#배포-sepolia)
+8. [UUPS 업그레이드 (Ch15)](#uups-업그레이드-ch15)
+9. [Slither 정적 분석 (Ch17)](#slither-정적-분석-ch17)
+10. [자주 겪는 문제](#자주-겪는-문제)
+
+---
+
+## 개발환경 요구사항
+
+| 도구 | 버전 | 확인 |
+|---|---|---|
+| **Node.js** | 20.x 이상 (22.x LTS 권장) | `node --version` |
+| **npm** | 10.x 이상 (Node 와 함께 설치) | `npm --version` |
+| **Git** | 최신 | `git --version` |
+| **Python** (Ch17 만) | 3.10 이상 (Slither 정적 분석용) | `python --version` |
+
+**Windows**: PowerShell 또는 Git Bash 권장.
+**Mac / Linux**: 기본 터미널.
+
+---
+
+## 처음 시작하기
+
+### 1. 저장소 clone
 
 ```bash
-cd practice
-npm install --legacy-peer-deps
-npm run compile
-npm test        # 전체 테스트 (466개+)
+git clone https://github.com/coincraft12/smart-contract-dev-course-practice.git
+cd smart-contract-dev-course-practice
 ```
+
+### 2. 의존성 설치
+
+```bash
+npm install --legacy-peer-deps
+```
+
+> **`--legacy-peer-deps` 이유**: Hardhat 관련 패키지들이 서로 다른 버전의 ethers 를 peer dependency 로 요구할 때 npm 이 에러 대신 관대하게 처리하도록 하는 옵션입니다. Hardhat 프로젝트에서는 표준적으로 사용합니다.
+
+### 3. 전체 컴파일
+
+```bash
+npx hardhat compile
+```
+
+성공하면 `artifacts/` (컴파일 결과) 와 `typechain-types/` (TypeScript 타입) 가 생성됩니다.
+
+### 4. 전체 테스트 실행
+
+```bash
+npx hardhat test
+```
+
+466개 이상의 테스트가 모두 통과해야 정상입니다.
+
+---
+
+## 프로젝트 구조
+
+```
+smart-contract-dev-course-practice/
+│
+├── contracts/           ← Solidity 소스 코드 (챕터별 폴더)
+│   ├── ch04/            (Remix → Hardhat 전환)
+│   │   ├── 4-1/ 4-2/ 4-3/ 4-4/
+│   ├── ch05/            (Solidity 문법)
+│   │   ├── 5-1/ 5-2/ 5-3/
+│   ├── ch06/ ... ch21/  (나머지 챕터)
+│
+├── test/                ← 테스트 코드 (chXX/*.test.ts)
+│
+├── scripts/             ← 배포·상호작용 스크립트
+│   ├── ch04/ ch07/ ... ch15/
+│
+├── ignition/            ← Hardhat Ignition 배포 모듈
+│   └── modules/Lock.ts
+│
+├── artifacts/           ← 컴파일 결과 (gitignore · 자동 생성)
+├── cache/               ← Hardhat 캐시 (gitignore · 자동 생성)
+├── typechain-types/     ← TypeScript 타입 (gitignore · 자동 생성)
+├── node_modules/        ← npm 패키지 (gitignore · 자동 생성)
+│
+├── hardhat.config.ts    ← Hardhat 설정 (solc 버전, 네트워크, 경로 등)
+├── package.json         ← npm 패키지 정의 및 스크립트
+├── tsconfig.json        ← TypeScript 설정
+├── slither.config.json  ← Slither 정적 분석 설정 (Ch17)
+├── .env.example         ← 환경변수 템플릿 (배포 시 사용)
+└── .gitignore
+```
+
+### hardhat.config.ts 안의 주요 설정
+
+```typescript
+{
+  solidity: {
+    version: "0.8.24",           // Solidity 컴파일러 버전
+    settings: {
+      optimizer: { enabled: true, runs: 200 },
+      evmVersion: "cancun",       // EVM 버전 (2024년 3월 이후 표준)
+    },
+  },
+  networks: {
+    localhost: { url: "http://127.0.0.1:8545" },  // 로컬 Hardhat 노드
+    sepolia: {
+      url: process.env.SEPOLIA_RPC_URL,           // .env 로 지정
+      accounts: [process.env.DEPLOYER_PRIVATE_KEY],
+      chainId: 11155111,
+    },
+  },
+  etherscan: { apiKey: { sepolia: process.env.ETHERSCAN_API_KEY } },
+  paths: {
+    sources: "./contracts",       // 컴파일 대상 폴더
+    tests: "./test",              // 테스트 폴더
+    cache: "./cache",
+    artifacts: "./artifacts",
+  },
+}
+```
+
+---
+
+## Hardhat 표준 명령어
+
+수강생은 아래 명령을 그대로 익히면 됩니다. 이 저장소만의 특수 세팅은 없습니다.
+
+| 목적 | 명령어 |
+|---|---|
+| **전체 컴파일** | `npx hardhat compile` |
+| **강제 재컴파일** | `npx hardhat compile --force` |
+| **전체 테스트** | `npx hardhat test` |
+| **특정 테스트 파일만** | `npx hardhat test test/ch07/SimpleBank.test.ts` |
+| **여러 테스트 파일** | `npx hardhat test test/ch07/*.test.ts test/ch08/*.test.ts` |
+| **가스 리포트 포함** | `REPORT_GAS=true npx hardhat test` (Windows PS: `$env:REPORT_GAS='true'; npx hardhat test`) |
+| **로컬 노드 실행** | `npx hardhat node` |
+| **배포 (로컬)** | `npx hardhat run scripts/ch07/deploySimpleBank.ts --network localhost` |
+| **배포 (Sepolia)** | `npx hardhat run scripts/ch14/deploySepolia.ts --network sepolia` |
+| **Etherscan 검증** | `npx hardhat verify --network sepolia <address> <constructor-args>` |
+| **캐시·artifacts 삭제** | `npx hardhat clean` |
+| **콘솔 (interactive)** | `npx hardhat console --network localhost` |
+
+**참고**: `npx hardhat compile` 자체는 파일이나 폴더 지정 옵션이 없습니다. `contracts/` 폴더 전체를 컴파일하는 것이 Hardhat 의 표준 동작이며, 캐시 덕분에 변경된 파일만 자동으로 재컴파일됩니다.
+
+---
+
+## package.json 편의 스크립트
+
+`npm run <script>` 로 실행하는 편의 명령입니다. 위 표준 명령어의 shortcut 이며, 학습 후에는 표준 CLI 를 그대로 쓰셔도 됩니다.
+
+```bash
+npm run compile         # = npx hardhat compile
+npm run test            # = npx hardhat test  (전체)
+npm run test:gas        # 가스 리포트 (REPORT_GAS=true)
+npm run node            # = npx hardhat node  (로컬 노드)
+npm run clean           # = npx hardhat clean
+```
+
+### 챕터별 테스트 shortcut
+
+각 챕터 테스트만 실행하는 shortcut 입니다. 내부적으로는 `npx hardhat test test/chXX/*.test.ts` 를 실행합니다.
+
+```bash
+npm run test:ch04       # 챕터 전체 (4-1, 4-2, 4-3, 4-4)
+npm run test:ch04-1     # 서브챕터만
+npm run test:ch05
+npm run test:ch05-1
+npm run test:ch05-2
+npm run test:ch05-3
+npm run test:ch06
+npm run test:ch07 ... npm run test:ch21
+npm run test:ch11-1 ... npm run test:ch11-4
+```
+
+전체 목록은 `package.json` 의 `"scripts"` 섹션을 참조하거나:
+
+```bash
+npm run           # 정의된 모든 스크립트 나열
+```
+
+### 챕터별 배포 shortcut
+
+```bash
+npm run deploy:ch04-2:local     # SimpleStorage 로컬 배포
+npm run deploy:ch04-3:local     # Lock (Hardhat Ignition)
+npm run deploy:ch04-4:sepolia   # Greeter Sepolia 배포
+npm run deploy:ch07:local       # SimpleBank
+npm run deploy:ch08:local       # MyERC20
+npm run deploy:ch09:local       # KRWCoin
+npm run deploy:ch10:local       # MyNFT
+npm run deploy:ch13:local       # EnterpriseNFTV1 (UUPS Proxy)
+npm run deploy:ch14:sepolia     # EnterpriseNFT UUPS Sepolia
+npm run upgrade:ch15            # UUPS 업그레이드
+```
+
+---
 
 ## 챕터별 실습 · 테스트
 
@@ -35,119 +232,124 @@ npm test        # 전체 테스트 (466개+)
 | **Ch21** | 캡스톤 스타터 | `SoulBoundBadge.sol`, `MerkleAirdrop.sol` | 10 |
 | **합계** | | 44 컨트랙트 · 40 테스트 파일 | **466** |
 
-## 챕터별 테스트 실행
+---
 
-```bash
-npm run test:ch04       # 챕터 전체
-npm run test:ch04-1     # 챕터 세부 (Ch04·Ch05·Ch11 은 -1/-2/-3/-4 서브 존재)
-npm run test:ch05
-npm run test:ch05-1
-npm run test:ch05-2
-npm run test:ch05-3
-npm run test:ch06
-npm run test:ch07
-npm run test:ch08
-npm run test:ch09
-npm run test:ch10
-npm run test:ch11
-npm run test:ch11-1
-npm run test:ch11-2
-npm run test:ch11-3
-npm run test:ch11-4
-npm run test:ch12
-npm run test:ch13
-npm run test:ch15
-npm run test:ch16
-npm run test:ch18
-npm run test:ch19
-npm run test:ch20
-npm run test:ch21
-npm run test:gas        # REPORT_GAS=true 로 실행 (gas 리포트 출력)
-```
+## 배포 (Sepolia)
 
-## 배포
+### 1. 사전 준비
 
-### 로컬 (`hardhat node` 별도 터미널)
+**필요한 것**:
+- Sepolia 테스트넷 ETH (faucet 에서 무료 획득)
+- Infura / Alchemy RPC URL (Ethereum Sepolia)
+- Etherscan API Key (컨트랙트 검증용)
+- 배포용 지갑의 Private Key (테스트용 지갑만 사용 · 실 자금 있는 지갑 절대 금지)
 
-```bash
-npm run node                        # 별도 터미널
-npm run deploy:ch04-2:local         # SimpleStorage
-npm run deploy:ch04-3:local         # Lock (Hardhat Ignition)
-npm run deploy:ch07:local           # SimpleBank
-npm run deploy:ch08:local           # MyERC20
-npm run deploy:ch09:local           # KRWCoin
-npm run deploy:ch10:local           # MyNFT
-npm run deploy:ch13:local           # EnterpriseNFTV1 (UUPS Proxy)
-```
-
-### Sepolia 배포 · 검증
+### 2. `.env` 파일 세팅
 
 ```bash
 cp .env.example .env
-# .env 에 아래 값 입력:
-#   DEPLOYER_PRIVATE_KEY=0x...
-#   SEPOLIA_RPC_URL=https://sepolia.infura.io/v3/...
-#   ETHERSCAN_API_KEY=...
-npm run deploy:ch04-4:sepolia       # Greeter
-npm run deploy:ch14:sepolia         # EnterpriseNFTV1 UUPS Proxy
 ```
 
-### UUPS 업그레이드 (Ch15)
+`.env` 에 아래 값 입력:
+
+```env
+# Sepolia RPC URL (Infura, Alchemy, PublicNode 등)
+SEPOLIA_RPC_URL=https://sepolia.infura.io/v3/YOUR_PROJECT_ID
+
+# 배포용 지갑 private key (0x 접두어 포함, 64자리 hex)
+DEPLOYER_PRIVATE_KEY=0xabcdef...
+
+# Etherscan API Key (https://etherscan.io/apis)
+ETHERSCAN_API_KEY=YOUR_ETHERSCAN_API_KEY
+```
+
+> ⚠️ **보안 주의**: `.env` 파일은 `.gitignore` 에 포함되어 git 에 올라가지 않지만, 로컬에서도 실 자금이 든 지갑의 private key 는 절대 사용하지 마세요. 테스트넷 전용 지갑을 새로 만드는 것을 권장합니다.
+
+### 3. 배포 실행
 
 ```bash
+# Greeter (Ch04)
+npx hardhat run scripts/ch04/4-4/deployGreeter.ts --network sepolia
+
+# EnterpriseNFT UUPS (Ch14)
+npx hardhat run scripts/ch14/deploySepolia.ts --network sepolia
+```
+
+### 4. Etherscan 검증
+
+배포 스크립트에서 자동 검증이 포함되어 있지만, 실패했다면 수동으로:
+
+```bash
+npx hardhat verify --network sepolia <deployed_address> "constructor_arg1" "arg2"
+```
+
+---
+
+## UUPS 업그레이드 (Ch15)
+
+```bash
+# 1. Ch13 로 EnterpriseNFTV1 로컬 배포
+npx hardhat node                                       # 별도 터미널
+npm run deploy:ch13:local                              # PROXY_ADDRESS 출력
+
+# 2. V2 로 업그레이드 (PROXY_ADDRESS 를 위 출력값으로 대체)
 PROXY_ADDRESS=0x... npm run upgrade:ch15
 ```
 
-## Slither (Ch17)
+Windows PowerShell:
+```powershell
+$env:PROXY_ADDRESS='0x...'
+npm run upgrade:ch15
+```
 
+---
+
+## Slither 정적 분석 (Ch17)
+
+**설치**:
 ```bash
 pip install slither-analyzer
-slither .
-# 상세 절차: scripts/ch17/run_slither.md
+slither --version    # 설치 확인
 ```
 
-## 인터랙션 스크립트
-
+**실행**:
 ```bash
-# SimpleBank 배포 후 상호작용
-npm run deploy:ch07:local
-hardhat run scripts/ch07/interactSimpleBank.ts --network localhost
-
-# KRWCoin 배포 후 상호작용
-npm run deploy:ch09:local
-hardhat run scripts/ch09/interactKRWCoin.ts --network localhost
+slither .
 ```
 
-## 구조
+`slither.config.json` 이 설정을 관리합니다.
 
+상세 절차와 결과 해석은 [`scripts/ch17/run_slither.md`](./scripts/ch17/run_slither.md) 참조.
+
+---
+
+## 자주 겪는 문제
+
+### `Error HH12: Trying to use a non-local installation of Hardhat`
+→ `node_modules` 가 없거나 설치가 잘못됨. `npm install --legacy-peer-deps` 재실행.
+
+### `Error HH308: Unrecognized positional argument`
+→ `npx hardhat compile <파일경로>` 처럼 파일을 인자로 넘김. Hardhat 은 파일 지정 옵션이 없습니다. `npx hardhat compile` 만 실행하면 변경된 파일만 자동으로 재컴파일됩니다.
+
+### `Error: Cannot find module 'hardhat'`
+→ 프로젝트 폴더가 아닌 곳에서 실행 중. `cd smart-contract-dev-course-practice` 후 재시도.
+
+### Sepolia 배포 시 `insufficient funds`
+→ 지갑에 Sepolia ETH 가 없음. [Sepolia Faucet](https://sepoliafaucet.com/) 에서 무료 획득.
+
+### Etherscan 검증 실패 (constructor arguments)
+→ 배포 시 사용한 constructor 인자를 정확히 같은 순서·타입으로 넘겨야 합니다:
+```bash
+npx hardhat verify --network sepolia 0xABC... "TokenName" "SYM" 1000000
 ```
-practice/
-├── contracts/
-│   ├── ch04/{4-1,4-2,4-3,4-4}/    Remix → Hardhat 전환 (6 컨트랙트)
-│   ├── ch05/{5-1,5-2,5-3}/        Solidity 문법 (12 컨트랙트)
-│   ├── ch06/                      OpenZeppelin 권한 (2 컨트랙트)
-│   ├── ch07/  SimpleBank.sol
-│   ├── ch08/  MyERC20.sol
-│   ├── ch09/  KRWCoin.sol
-│   ├── ch10/  MyNFT.sol
-│   ├── ch11/{11-1,11-2,11-3,11-4}/ERC-1155 (5 컨트랙트)
-│   ├── ch12/  Logic.sol, Proxy.sol
-│   ├── ch13/  EnterpriseNFTV1.sol
-│   ├── ch15/  EnterpriseNFTV2.sol, EnterpriseNFTV2_BAD.sol
-│   ├── ch16/  VulnerableBank.sol, SafeBank.sol, Attacker.sol, TxOriginVictim.sol
-│   ├── ch17/  SlitherTarget.sol
-│   ├── ch18/  AuditTarget.sol + REPORT.md
-│   ├── ch19/  MultiSigWallet.sol
-│   ├── ch20/  MultisigService.sol
-│   └── ch21/  SoulBoundBadge.sol, MerkleAirdrop.sol
-├── test/          (챕터별 · 서브챕터별 매핑)
-├── scripts/       (챕터별 배포·상호작용)
-├── ignition/      Hardhat Ignition 모듈 (Ch04-3 Lock)
-├── slither.config.json
-├── hardhat.config.ts
-├── tsconfig.json
-└── package.json
+
+### `Nothing to compile`
+→ 아무 파일도 변경되지 않았을 때 정상 출력. 강제 재컴파일이 필요하면:
+```bash
+npx hardhat compile --force
 ```
+
+---
 
 ## 문의 · 이슈
 
