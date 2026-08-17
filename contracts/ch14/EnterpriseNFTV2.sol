@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import "../ch13/EnterpriseNFTV1.sol";
+import "../ch12/EnterpriseNFTV1.sol";
 
 /**
  * @title EnterpriseNFTV2 (Good upgrade)

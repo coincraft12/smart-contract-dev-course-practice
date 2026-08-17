@@ -2,7 +2,7 @@ import { expect } from "chai";
 import { ethers } from "hardhat";
 import { loadFixture } from "@nomicfoundation/hardhat-toolbox/network-helpers";
 
-describe("Ch11-3 — TokenIdEncoding (네임스페이스 안전성)", function () {
+describe("Ch10 — TokenIdEncoding (네임스페이스 안전성)", function () {
 
   async function deploy() {
     const F = await ethers.getContractFactory("TokenIdDemo");

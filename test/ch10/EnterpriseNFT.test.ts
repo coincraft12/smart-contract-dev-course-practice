@@ -2,7 +2,7 @@ import { expect } from "chai";
 import { ethers } from "hardhat";
 import { loadFixture } from "@nomicfoundation/hardhat-toolbox/network-helpers";
 
-describe("Ch11 — EnterpriseNFT (ERC-1155)", function () {
+describe("Ch10 — EnterpriseNFT (ERC-1155)", function () {
 
   const BASE_URI = "https://api.example.com/token/{id}.json";
 

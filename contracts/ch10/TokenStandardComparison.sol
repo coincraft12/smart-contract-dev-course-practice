@@ -3,7 +3,7 @@ pragma solidity ^0.8.24;
 
 /**
  * @title TokenStandardComparison
- * @dev Ch11-1 실습 — 왜 ERC-1155가 필요한가
+ * @dev Ch10 실습 — 왜 ERC-1155가 필요한가
  *
  * 학습 포인트:
  * - 세 표준을 나란히 배포해 근본 차이 관찰:

@@ -5,7 +5,7 @@ import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 
 /**
  * @title BatchOperations
- * @dev Ch11-2 실습 — 배치 전송 구조
+ * @dev Ch10 실습 — 배치 전송 구조
  *
  * 학습 포인트:
  * - mint vs mintBatch — 여러 tokenId 발급 시 한 번의 tx로

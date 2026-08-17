@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/utils/Pausable.sol";
 
 /**
  * @title EnterpriseNFT (base, non-upgradeable)
- * @dev Ch11 실습 — ERC-1155 기업 배지/증서 발행 컨트랙트
+ * @dev Ch10 실습 — ERC-1155 기업 배지/증서 발행 컨트랙트
  *
  * 학습 포인트:
  * - ERC-1155: 하나의 컨트랙트가 여러 tokenId 관리
@@ -16,7 +16,7 @@ import "@openzeppelin/contracts/utils/Pausable.sol";
  * - batch mint / batch transfer
  * - URI 라이프사이클
  *
- * ⚠️ 이 파일은 non-upgradeable 버전 (Ch11 학습용).
+ * ⚠️ 이 파일은 non-upgradeable 버전 (Ch10 학습용).
  *    Ch13-15에서 UUPS Upgradeable 버전을 다룬다.
  */
 contract EnterpriseNFT is ERC1155, AccessControl, Pausable {

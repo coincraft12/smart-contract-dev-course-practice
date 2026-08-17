@@ -2,7 +2,7 @@ import { expect } from "chai";
 import { ethers } from "hardhat";
 import { loadFixture } from "@nomicfoundation/hardhat-toolbox/network-helpers";
 
-describe("Ch11-2 — Batch Operations", function () {
+describe("Ch10 — Batch Operations", function () {
 
   async function deploy() {
     const [owner, alice, bob] = await ethers.getSigners();

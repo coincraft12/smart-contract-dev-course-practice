@@ -2,7 +2,7 @@ import { expect } from "chai";
 import { ethers } from "hardhat";
 import { loadFixture } from "@nomicfoundation/hardhat-toolbox/network-helpers";
 
-describe("Ch11-4 — Badge System 표준 비교", function () {
+describe("Ch10 — Badge System 표준 비교", function () {
 
   async function deploy() {
     const [admin, alice, bob] = await ethers.getSigners();

@@ -3,7 +3,7 @@ pragma solidity ^0.8.24;
 
 /**
  * @title TokenIdEncoding
- * @dev Ch11-3 실습 — tokenId 인코딩 안전성 해부
+ * @dev Ch10 실습 — tokenId 인코딩 안전성 해부
  *
  * 학습 포인트:
  * - 256비트 tokenId를 논리적 두 부분(productCode + eventCode)으로 나누기

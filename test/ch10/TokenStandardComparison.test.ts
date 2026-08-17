@@ -2,7 +2,7 @@ import { expect } from "chai";
 import { ethers } from "hardhat";
 import { loadFixture } from "@nomicfoundation/hardhat-toolbox/network-helpers";
 
-describe("Ch11-1 — Token Standard Comparison (왜 ERC-1155?)", function () {
+describe("Ch10 — Token Standard Comparison (왜 ERC-1155?)", function () {
 
   async function deploy() {
     const [owner, alice, bob] = await ethers.getSigners();
