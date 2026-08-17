@@ -2,7 +2,7 @@ import { expect } from "chai";
 import { ethers } from "hardhat";
 import { loadFixture } from "@nomicfoundation/hardhat-toolbox/network-helpers";
 
-describe("Ch20 — MultisigService + Travel Rule", function () {
+describe("Ch19 — MultisigService + Travel Rule", function () {
 
   async function deploy() {
     const [funder, alice, bob, carol, dave, receiver] = await ethers.getSigners();

@@ -3,7 +3,7 @@ pragma solidity ^0.8.20;
 
 /**
  * @title Logic
- * @dev Ch12 실습 — Proxy가 call/delegatecall로 호출하는 구현체
+ * @dev Ch11 실습 — Proxy가 call/delegatecall로 호출하는 구현체
  *
  * setValue() 호출 시 msg.sender / tx.origin을 함께 기록해
  * 두 호출 방식의 context 차이를 직접 확인한다.

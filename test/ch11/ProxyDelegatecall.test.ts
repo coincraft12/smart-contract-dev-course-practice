@@ -2,7 +2,7 @@ import { expect } from "chai";
 import { ethers } from "hardhat";
 import { loadFixture } from "@nomicfoundation/hardhat-toolbox/network-helpers";
 
-describe("Ch12 — msg.sender / call / delegatecall", function () {
+describe("Ch11 — msg.sender / call / delegatecall", function () {
 
   async function deploy() {
     const [owner, alice] = await ethers.getSigners();

@@ -9,7 +9,7 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 
 /**
  * @title EnterpriseNFTV1 (UUPS Upgradeable)
- * @dev Ch13-14 실습 — 업그레이드 가능한 EnterpriseNFT v1
+ * @dev Ch12-14 실습 — 업그레이드 가능한 EnterpriseNFT v1
  *
  * 학습 포인트:
  * - Initializable: constructor 대신 initialize()

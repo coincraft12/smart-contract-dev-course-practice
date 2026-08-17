@@ -1,4 +1,4 @@
-# Ch17 — Slither 실행 가이드
+# Ch16 — Slither 실행 가이드
 
 ## 사전 준비
 
@@ -23,7 +23,7 @@ cd practice
 slither .
 ```
 
-### 특정 컨트랙트만 스캔 (Ch17 학습 대상)
+### 특정 컨트랙트만 스캔 (Ch16 학습 대상)
 ```bash
 slither contracts/ch17/SlitherTarget.sol
 ```

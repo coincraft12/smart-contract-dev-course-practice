@@ -11,8 +11,8 @@
 5. [package.json 스크립트 총정리](#packagejson-스크립트-총정리)
 6. [배포 프로세스 상세](#배포-프로세스-상세)
 7. [Sepolia 배포 · Etherscan 검증](#sepolia-배포--etherscan-검증)
-8. [UUPS 업그레이드 (Ch13-15)](#uups-업그레이드-ch13-15)
-9. [Slither 정적 분석 (Ch17)](#slither-정적-분석-ch17)
+8. [UUPS 업그레이드 (Ch12-15)](#uups-업그레이드-ch12-15)
+9. [Slither 정적 분석 (Ch16)](#slither-정적-분석-ch16)
 10. [자주 겪는 문제](#자주-겪는-문제)
 11. [부록: Hardhat 표준 CLI](#부록-hardhat-표준-cli)
 
@@ -20,7 +20,7 @@
 
 ## 이 저장소는 무엇인가
 
-coincraft.io **솔리디티 스마트컨트랙트 개발자 과정** (Ch04~Ch21) 의 모든 실습 코드를 **하나의 Hardhat 프로젝트**에 통합해 놓은 저장소입니다.
+coincraft.io **솔리디티 스마트컨트랙트 개발자 과정** (Ch04~Ch20) 의 모든 실습 코드를 **하나의 Hardhat 프로젝트**에 통합해 놓은 저장소입니다.
 
 ### 이 저장소의 특징 (일반 Hardhat 프로젝트와 다른 점)
 
@@ -58,19 +58,18 @@ smart-contract-dev-course-practice/
 │   │   └── 5-3/                     상속 (inheritance·interface·library·strategy)
 │   ├── ch06/                      OpenZeppelin 권한
 │   ├── ch07/                      SimpleBank
-│   ├── ch08/                      MyERC20 (직접 구현)
-│   ├── ch09/                      KRWCoin (OZ 활용)
-│   ├── ch10/                      MyNFT (ERC-721)
-│   ├── ch11/                      ERC-1155 (11-1~11-4 서브)
-│   ├── ch12/                      msg.sender / call / delegatecall
-│   ├── ch13/                      EnterpriseNFTV1 (UUPS)
-│   ├── ch15/                      UUPS V2 업그레이드
-│   ├── ch16/                      취약점·방어 (Reentrancy·tx.origin)
-│   ├── ch17/                      SlitherTarget
-│   ├── ch18/                      AuditTarget + REPORT.md
-│   ├── ch19/                      MultiSigWallet (EIP-712)
-│   ├── ch20/                      MultisigService (Travel Rule)
-│   └── ch21/                      캡스톤 스타터 (SBT·MerkleAirdrop)
+│   ├── ch08/                      MyERC20 + KRWCoin (ERC-20)
+│   ├── ch09/                      MyNFT (ERC-721)
+│   ├── ch10/                      ERC-1155
+│   ├── ch11/                      msg.sender / call / delegatecall
+│   ├── ch12/                      EnterpriseNFTV1 (UUPS)
+│   ├── ch14/                      UUPS V2 업그레이드
+│   ├── ch15/                      취약점·방어 (Reentrancy·tx.origin)
+│   ├── ch16/                      SlitherTarget
+│   ├── ch17/                      AuditTarget + REPORT.md
+│   ├── ch18/                      MultiSigWallet (EIP-712)
+│   ├── ch19/                      MultisigService (Travel Rule)
+│   └── ch20/                      캡스톤 스타터 (SBT·MerkleAirdrop)
 │
 ├── test/                          ← 테스트 (40 파일, 466 tests)
 │   └── chXX/[sub/]                컨트랙트와 동일 구조로 미러링
@@ -78,13 +77,12 @@ smart-contract-dev-course-practice/
 ├── scripts/                       ← 배포·상호작용 스크립트
 │   ├── ch04/{4-2,4-4}/            SimpleStorage, Greeter
 │   ├── ch07/                      deploySimpleBank, interactSimpleBank
-│   ├── ch08/                      deployMyERC20
-│   ├── ch09/                      deployKRWCoin, interactKRWCoin
-│   ├── ch10/                      deployMyNFT
-│   ├── ch13/                      deployProxy (UUPS)
-│   ├── ch14/                      deploySepolia (Sepolia 실배포)
-│   ├── ch15/                      upgradeToV2
-│   └── ch17/                      run_slither.md
+│   ├── ch08/                      deployMyERC20, deployKRWCoin, interactKRWCoin
+│   ├── ch09/                      deployMyNFT
+│   ├── ch12/                      deployProxy (UUPS)
+│   ├── ch13/                      deploySepolia (Sepolia 실배포)
+│   ├── ch14/                      upgradeToV2
+│   └── ch16/                      run_slither.md
 │
 ├── ignition/                      ← Hardhat Ignition 배포 모듈
 │   └── modules/Lock.ts            Ch04-3 실습 (Ignition 사용)
@@ -97,12 +95,12 @@ smart-contract-dev-course-practice/
 ├── hardhat.config.ts              Hardhat 설정 (solc 0.8.24 · cancun · localhost/sepolia)
 ├── package.json                   npm 편의 스크립트 다수
 ├── tsconfig.json                  TypeScript 설정
-├── slither.config.json            Slither 설정 (Ch17)
+├── slither.config.json            Slither 설정 (Ch16)
 ├── .env.example                   환경변수 템플릿
 └── .gitignore
 ```
 
-**챕터 없는 번호** (Ch14): `contracts/ch14/` 폴더 없음. Ch13 에서 만든 컨트랙트를 Sepolia 에 배포하는 챕터라 스크립트 (`scripts/ch14/`) 만 있음.
+**챕터 없는 번호** (Ch13): `contracts/ch13/` 폴더 없음. Ch12 에서 만든 컨트랙트를 Sepolia 에 배포하는 챕터라 스크립트 (`scripts/ch13/`) 만 있음.
 
 ---
 
@@ -135,7 +133,7 @@ npm run test:ch07
 npx hardhat test test/ch07/SimpleBank.test.ts
 ```
 
-**서브챕터가 있는 챕터** (Ch04, Ch05, Ch11):
+**서브챕터가 있는 챕터** (Ch04, Ch05):
 ```bash
 npm run test:ch05        # ch05 전체 (5-1, 5-2, 5-3 모두)
 npm run test:ch05-1      # ch05-1 만 (타입)
@@ -165,13 +163,13 @@ npm run deploy:ch07:local     # SimpleBank
 npx hardhat run scripts/ch07/interactSimpleBank.ts --network localhost
 ```
 
-**로컬 배포 지원 챕터**: Ch04-2, Ch04-3 (Ignition), Ch07, Ch08, Ch09, Ch10, Ch13
+**로컬 배포 지원 챕터**: Ch04-2, Ch04-3 (Ignition), Ch07, Ch08, Ch09, Ch12
 
-### Step 4. Sepolia 배포 (Ch14~ · 실전)
+### Step 4. Sepolia 배포 (Ch13~ · 실전)
 
-Ch14 부터는 실제 테스트넷 (Sepolia) 에 배포. `.env` 세팅 필요 → 아래 [Sepolia 섹션](#sepolia-배포--etherscan-검증) 참조.
+Ch13 부터는 실제 테스트넷 (Sepolia) 에 배포. `.env` 세팅 필요 → 아래 [Sepolia 섹션](#sepolia-배포--etherscan-검증) 참조.
 
-**Sepolia 배포 지원 챕터**: Ch04-4 (Greeter), Ch14 (EnterpriseNFT UUPS)
+**Sepolia 배포 지원 챕터**: Ch04-4 (Greeter), Ch13 (EnterpriseNFT UUPS)
 
 ---
 
@@ -183,20 +181,19 @@ Ch14 부터는 실제 테스트넷 (Sepolia) 에 배포. `.env` 세팅 필요 �
 | **Ch05** | Solidity 문법 | `contracts/ch05/{5-1,5-2,5-3}/` (12개) | `npm run test:ch05` (148) | — (문법 학습 · 배포 없음) |
 | **Ch06** | OpenZeppelin 권한 | `contracts/ch06/` (2개) | `npm run test:ch06` (18) | — |
 | **Ch07** | SimpleBank | `contracts/ch07/SimpleBank.sol` | `npm run test:ch07` (23) | `npm run deploy:ch07:local` |
-| **Ch08** | ERC-20 직접 구현 | `contracts/ch08/MyERC20.sol` | `npm run test:ch08` (11) | `npm run deploy:ch08:local` |
-| **Ch09** | KRWCoin (OZ) | `contracts/ch09/KRWCoin.sol` | `npm run test:ch09` (32) | `npm run deploy:ch09:local` |
-| **Ch10** | MyNFT (ERC-721) | `contracts/ch10/MyNFT.sol` | `npm run test:ch10` (21) | `npm run deploy:ch10:local` |
-| **Ch11** | ERC-1155 | `contracts/ch11/{11-1,11-2,11-3,11-4}/` (5개) | `npm run test:ch11` (49) | — |
-| **Ch12** | msg.sender/call/delegatecall | `contracts/ch12/{Logic,Proxy}.sol` | `npm run test:ch12` (6) | — |
-| **Ch13** | UUPS Proxy | `contracts/ch13/EnterpriseNFTV1.sol` | `npm run test:ch13` (7) | `npm run deploy:ch13:local` |
-| **Ch14** | Sepolia 배포 | (Ch13 컨트랙트) | — | `npm run deploy:ch14:sepolia` |
-| **Ch15** | UUPS Upgrade | `contracts/ch15/EnterpriseNFTV2{,_BAD}.sol` | `npm run test:ch15` (5) | `npm run upgrade:ch15` |
-| **Ch16** | 취약점·방어 | `contracts/ch16/{VulnerableBank,SafeBank,Attacker,TxOriginVictim}.sol` | `npm run test:ch16` (8) | — |
-| **Ch17** | Slither 정적 분석 | `contracts/ch17/SlitherTarget.sol` | `slither .` (외부 도구) | — |
-| **Ch18** | 감사 리포트 | `contracts/ch18/AuditTarget.sol` + `REPORT.md` | `npm run test:ch18` (4) | — |
-| **Ch19** | 멀티시그 (EIP-712) | `contracts/ch19/MultiSigWallet.sol` | `npm run test:ch19` (8) | — |
-| **Ch20** | MultisigService | `contracts/ch20/MultisigService.sol` | `npm run test:ch20` (10) | — |
-| **Ch21** | 캡스톤 스타터 | `contracts/ch21/{SoulBoundBadge,MerkleAirdrop}.sol` | `npm run test:ch21` (10) | — (캡스톤 · 학생 구현) |
+| **Ch08** | ERC-20 (MyERC20 + KRWCoin) | `contracts/ch08/{MyERC20,KRWCoin}.sol` | `npm run test:ch08` (43) | `npm run deploy:ch08:erc20:local` · `deploy:ch08:krwcoin:local` |
+| **Ch09** | ERC-721 (MyNFT) | `contracts/ch09/MyNFT.sol` | `npm run test:ch09` (21) | `npm run deploy:ch09:local` |
+| **Ch10** | ERC-1155 | `contracts/ch10/` (5개) | `npm run test:ch10` (49) | — |
+| **Ch11** | msg.sender/call/delegatecall | `contracts/ch11/{Logic,Proxy}.sol` | `npm run test:ch11` (6) | — |
+| **Ch12** | UUPS Proxy | `contracts/ch12/EnterpriseNFTV1.sol` | `npm run test:ch12` (7) | `npm run deploy:ch12:local` |
+| **Ch13** | Sepolia 배포 | (Ch12 컨트랙트) | — | `npm run deploy:ch13:sepolia` |
+| **Ch14** | UUPS Upgrade | `contracts/ch14/EnterpriseNFTV2{,_BAD}.sol` | `npm run test:ch14` (5) | `npm run upgrade:ch14` |
+| **Ch15** | 취약점·방어 | `contracts/ch15/{VulnerableBank,SafeBank,Attacker,TxOriginVictim}.sol` | `npm run test:ch15` (8) | — |
+| **Ch16** | Slither 정적 분석 | `contracts/ch16/SlitherTarget.sol` | `slither .` (외부 도구) | — |
+| **Ch17** | 감사 리포트 | `contracts/ch17/AuditTarget.sol` + `REPORT.md` | `npm run test:ch17` (4) | — |
+| **Ch18** | 멀티시그 (EIP-712) | `contracts/ch18/MultiSigWallet.sol` | `npm run test:ch18` (8) | — |
+| **Ch19** | MultisigService | `contracts/ch19/MultisigService.sol` | `npm run test:ch19` (10) | — |
+| **Ch20** | 캡스톤 스타터 | `contracts/ch20/{SoulBoundBadge,MerkleAirdrop}.sol` | `npm run test:ch20` (10) | — (캡스톤 · 학생 구현) |
 | **합계** | | **44 컨트랙트** | **466 tests** | |
 
 ---
@@ -216,14 +213,14 @@ Ch14 부터는 실제 테스트넷 (Sepolia) 에 배포. `.env` 세팅 필요 �
 ### 챕터별 테스트 편의 스크립트
 
 ```bash
-npm run test:ch04         npm run test:ch04-1   ~   npm run test:ch04-4
-npm run test:ch05         npm run test:ch05-1   ~   npm run test:ch05-3
-npm run test:ch06 ~ npm run test:ch10
-npm run test:ch11         npm run test:ch11-1   ~   npm run test:ch11-4
-npm run test:ch12, ch13, ch15, ch16, ch18, ch19, ch20, ch21
+npm run test:ch04
+npm run test:ch05
+npm run test:ch06 ~ npm run test:ch09
+npm run test:ch10
+npm run test:ch11, ch12, ch14, ch15, ch17, ch18, ch19, ch20
 ```
 
-**주의: Ch14, Ch17 은 test 스크립트 없음** (Ch14 는 배포만, Ch17 은 Slither 외부 도구).
+**주의: Ch13, Ch16 은 test 스크립트 없음** (Ch13 는 배포만, Ch16 은 Slither 외부 도구).
 
 ### 챕터별 배포 편의 스크립트
 
@@ -233,11 +230,10 @@ npm run deploy:ch04-3:local   # Lock (Ignition)
 npm run deploy:ch04-4:sepolia # Greeter (Sepolia)
 npm run deploy:ch07:local     # SimpleBank
 npm run deploy:ch08:local     # MyERC20
-npm run deploy:ch09:local     # KRWCoin
-npm run deploy:ch10:local     # MyNFT
-npm run deploy:ch13:local     # EnterpriseNFTV1 (UUPS)
-npm run deploy:ch14:sepolia   # EnterpriseNFT (Sepolia · Ch13 컨트랙트)
-npm run upgrade:ch15          # V2 업그레이드
+npm run deploy:ch09:local     # MyNFT
+npm run deploy:ch12:local     # EnterpriseNFTV1 (UUPS)
+npm run deploy:ch13:sepolia   # EnterpriseNFT (Sepolia · Ch12 컨트랙트)
+npm run upgrade:ch14          # V2 업그레이드
 ```
 
 **전체 스크립트 나열**:
@@ -327,8 +323,8 @@ ETHERSCAN_API_KEY=YOUR_ETHERSCAN_API_KEY
 # Greeter (Ch04-4)
 npm run deploy:ch04-4:sepolia
 
-# EnterpriseNFT UUPS (Ch14)
-npm run deploy:ch14:sepolia
+# EnterpriseNFT UUPS (Ch13)
+npm run deploy:ch13:sepolia
 ```
 
 배포 로그에서 **배포된 컨트랙트 주소** 확인 (예: `0x123...`).
@@ -354,36 +350,36 @@ npx hardhat verify --network sepolia 0xABC123... "MyToken" "MTK" 1000000
 
 ---
 
-## UUPS 업그레이드 (Ch13-15)
+## UUPS 업그레이드 (Ch12-15)
 
 **개념**: UUPS (Universal Upgradeable Proxy Standard, EIP-1822) 는 컨트랙트 코드를 배포 후에도 교체 가능하게 하는 표준. 프록시 컨트랙트는 그대로 두고 구현 컨트랙트만 새 주소로 교체.
 
 ### 순서
 
 ```bash
-# 1. V1 배포 (Ch13)
+# 1. V1 배포 (Ch12)
 npm run node              # 로컬 노드 별도 터미널
-npm run deploy:ch13:local
+npm run deploy:ch12:local
 # → Proxy 주소 출력. 복사 필요.
 
-# 2. V2 로 업그레이드 (Ch15)
+# 2. V2 로 업그레이드 (Ch14)
 # Windows PowerShell:
 $env:PROXY_ADDRESS='0x...'
-npm run upgrade:ch15
+npm run upgrade:ch14
 
 # Mac/Linux:
-PROXY_ADDRESS=0x... npm run upgrade:ch15
+PROXY_ADDRESS=0x... npm run upgrade:ch14
 ```
 
 **핵심 학습 포인트**:
 - V2 를 배포하면 새 구현 컨트랙트 배포 · Proxy 는 여전히 같은 주소
 - Proxy 의 storage 는 유지됨 (state 안 잃음)
 - V2 의 storage layout 이 V1 과 호환돼야 함 (필드 순서 유지 · 추가만 가능)
-- `EnterpriseNFTV2_BAD.sol` 은 일부러 storage 순서 어겨 fail 하는 예시 (Ch15 테스트에서 검증)
+- `EnterpriseNFTV2_BAD.sol` 은 일부러 storage 순서 어겨 fail 하는 예시 (Ch14 테스트에서 검증)
 
 ---
 
-## Slither 정적 분석 (Ch17)
+## Slither 정적 분석 (Ch16)
 
 **개념**: Solidity 코드를 실행하지 않고 정적으로 분석해 취약점·안티패턴 감지하는 도구 (Trail of Bits 개발).
 
@@ -410,9 +406,9 @@ slither .
 - **MEDIUM**: 심각 · 수정 권장
 - **LOW/INFORMATIONAL**: 코드 스타일 · 최적화
 
-Ch17 목표: `contracts/ch17/SlitherTarget.sol` 을 리팩토링해 **HIGH/MEDIUM 0건** 달성.
+Ch16 목표: `contracts/ch16/SlitherTarget.sol` 을 리팩토링해 **HIGH/MEDIUM 0건** 달성.
 
-상세 절차: [`scripts/ch17/run_slither.md`](./scripts/ch17/run_slither.md)
+상세 절차: [`scripts/ch16/run_slither.md`](./scripts/ch16/run_slither.md)
 
 ---
 
@@ -452,7 +448,7 @@ npx hardhat compile --force
 → Bash 문법. PowerShell 은:
 ```powershell
 $env:PROXY_ADDRESS='0x...'
-npm run upgrade:ch15
+npm run upgrade:ch14
 ```
 
 ### 로컬 배포 후 재접속 시 컨트랙트 사라짐

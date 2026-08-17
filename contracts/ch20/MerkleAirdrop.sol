@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 
 /**
  * @title MerkleAirdrop
- * @dev Ch21 캡스톤 예제 — Merkle proof 기반 에어드롭
+ * @dev Ch20 캡스톤 예제 — Merkle proof 기반 에어드롭
  *
  * 학습 포인트:
  * - Merkle root로 대량 화이트리스트를 온체인 하나의 슬롯에 저장

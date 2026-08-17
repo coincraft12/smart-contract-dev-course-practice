@@ -3,7 +3,7 @@ pragma solidity ^0.8.24;
 
 /**
  * @title MyNFT
- * @dev Ch10 실습 — ERC-721 표준 직접 구현 (OpenZeppelin 사용 안 함)
+ * @dev Ch09 실습 — ERC-721 표준 직접 구현 (OpenZeppelin 사용 안 함)
  *
  * 학습 포인트:
  * - 각 tokenId가 고유 (대체 불가능)

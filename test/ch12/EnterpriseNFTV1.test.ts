@@ -2,7 +2,7 @@ import { expect } from "chai";
 import { ethers, upgrades } from "hardhat";
 import { loadFixture } from "@nomicfoundation/hardhat-toolbox/network-helpers";
 
-describe("Ch13-14 — EnterpriseNFTV1 (UUPS Proxy)", function () {
+describe("Ch12-14 — EnterpriseNFTV1 (UUPS Proxy)", function () {
 
   const URI = "https://api.example.com/token/{id}.json";
 

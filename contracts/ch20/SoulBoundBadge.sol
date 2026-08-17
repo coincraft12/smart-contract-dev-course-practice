@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/access/AccessControl.sol";
 
 /**
  * @title SoulBoundBadge
- * @dev Ch21 캡스톤 예제 — 양도 불가능한 배지 NFT (Soulbound Token)
+ * @dev Ch20 캡스톤 예제 — 양도 불가능한 배지 NFT (Soulbound Token)
  *
  * 학습 포인트:
  * - transfer 차단으로 SBT 구현

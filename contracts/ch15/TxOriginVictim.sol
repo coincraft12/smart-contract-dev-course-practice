@@ -3,7 +3,7 @@ pragma solidity ^0.8.24;
 
 /**
  * @title TxOriginVictim / TxOriginAttacker
- * @dev Ch16 실습 — tx.origin 함정
+ * @dev Ch15 실습 — tx.origin 함정
  *
  * ❌ 취약점: tx.origin으로 인증하면 피싱 컨트랙트를 통해 우회 가능
  * ✅ 방어: msg.sender 사용

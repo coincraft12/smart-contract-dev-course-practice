@@ -1,6 +1,6 @@
-# Ch18 — AuditTarget 감사 리포트 (예시)
+# Ch17 — AuditTarget 감사 리포트 (예시)
 
-> 감사 대상: `AuditTarget.sol` (Ch18)
+> 감사 대상: `AuditTarget.sol` (Ch17)
 > 감사자: [Name]
 > 감사 일자: YYYY-MM-DD
 > 커밋: `<commit hash>`

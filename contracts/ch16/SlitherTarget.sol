@@ -3,7 +3,7 @@ pragma solidity ^0.8.24;
 
 /**
  * @title SlitherTarget
- * @dev Ch17 실습 — Slither가 잡아낼 취약점을 의도적으로 남긴 학습용 컨트랙트
+ * @dev Ch16 실습 — Slither가 잡아낼 취약점을 의도적으로 남긴 학습용 컨트랙트
  *
  * 이 파일은 slither 실행 시 발견되어야 할 이슈들을 포함:
  *  1. Reentrancy (HIGH)          — withdraw()의 CEI 위반

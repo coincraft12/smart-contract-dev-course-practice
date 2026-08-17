@@ -3,10 +3,10 @@ import { ethers } from "hardhat";
 import { loadFixture } from "@nomicfoundation/hardhat-toolbox/network-helpers";
 
 /**
- * Ch18 — 감사 리포트의 발견 항목을 테스트로 재현
+ * Ch17 — 감사 리포트의 발견 항목을 테스트로 재현
  * (감사 발견 → PoC 테스트 → 수정 → 검증 워크플로우)
  */
-describe("Ch18 — AuditTarget findings PoC", function () {
+describe("Ch17 — AuditTarget findings PoC", function () {
 
   async function deploy() {
     const [owner, alice, bob] = await ethers.getSigners();

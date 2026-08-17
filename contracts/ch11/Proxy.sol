@@ -3,7 +3,7 @@ pragma solidity ^0.8.20;
 
 /**
  * @title Proxy
- * @dev Ch12 실습 — call / delegatecall 차이 시연
+ * @dev Ch11 실습 — call / delegatecall 차이 시연
  *
  * ── 배포 순서 ────────────────────────────────────────────────
  *   1. Logic.sol 먼저 배포 → 주소 복사

@@ -2,7 +2,7 @@ import { expect } from "chai";
 import { ethers } from "hardhat";
 import { loadFixture } from "@nomicfoundation/hardhat-toolbox/network-helpers";
 
-describe("Ch10 — MyNFT (ERC-721 직접 구현)", function () {
+describe("Ch09 — MyNFT (ERC-721 직접 구현)", function () {
 
   const BASE_URI = "https://example.com/nft/";
 

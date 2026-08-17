@@ -18,7 +18,7 @@ interface ITravelRuleOracle {
 
 /**
  * @title MultisigService
- * @dev Ch20 실습 — 서명 수집·실행·Travel Rule 컴플라이언스 통합
+ * @dev Ch19 실습 — 서명 수집·실행·Travel Rule 컴플라이언스 통합
  *
  * 학습 포인트:
  * - 온체인 서명 수집 (propose → confirm → execute)
