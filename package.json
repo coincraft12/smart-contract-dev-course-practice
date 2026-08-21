@@ -19,6 +19,8 @@
     "test:ch07": "hardhat test test/ch07/SimpleBank.test.ts",
     "test:ch08": "hardhat test test/ch08/MyERC20.test.ts test/ch08/KRWCoin.test.ts",
     "test:ch09": "hardhat test test/ch09/MyNFT.test.ts",
+    "test:ch09:oz": "hardhat test test/ch09/MyNFT_OZ.test.ts",
+    "test:ch09:all": "hardhat test test/ch09/MyNFT.test.ts test/ch09/MyNFT_OZ.test.ts",
     "test:ch10": "hardhat test test/ch10/TokenStandardComparison.test.ts test/ch10/BatchOperations.test.ts test/ch10/TokenIdEncoding.test.ts test/ch10/EnterpriseNFT.test.ts test/ch10/BadgeSystemComparison.test.ts",
     "test:ch11": "hardhat test test/ch11/ProxyDelegatecall.test.ts",
     "test:ch12": "hardhat test test/ch12/EnterpriseNFTV1.test.ts",
