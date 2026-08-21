@@ -1,6 +1,6 @@
 # Smart Contract Dev Course — Practice Code
 
-**coincraft.io 솔리디티 스마트컨트랙트 개발자 과정 · 수강생 실습 저장소** (Ch04~Ch21)
+**coincraft.io 솔리디티 스마트컨트랙트 개발자 과정 · 수강생 실습 저장소** (Ch04~Ch20)
 
 강의에서 사용하는 모든 컨트랙트·테스트·배포 스크립트가 챕터별로 정리돼 있습니다.
 
@@ -37,7 +37,7 @@ npm test
 | Node.js | 20.x 이상 (22.x LTS 권장) |
 | npm | 10.x 이상 |
 | Git | 최신 |
-| Python | 3.10 이상 (Ch17 Slither 만) |
+| Python | 3.10 이상 (Ch16 Slither 만) |
 
 ---
 
@@ -48,7 +48,7 @@ npm test
 1. **강의노트 + 코드 대조** — 강의노트 상단의 실습 저장소 딥링크로 이동해서 `contracts/chXX/*.sol` 열기
 2. **테스트로 검증** — `npm run test:chXX` 실행 (강의에서 배운 개념 확인)
 3. **로컬 배포** (Ch07+) — `npm run deploy:chXX:local` (별도 터미널에서 `npm run node` 먼저)
-4. **Sepolia 배포** (Ch14~) — `.env` 세팅 후 `npm run deploy:ch14:sepolia`
+4. **Sepolia 배포** (Ch13~) — `.env` 세팅 후 `npm run deploy:ch13:sepolia`
 
 > 상세 절차: [GUIDE_WORKFLOW.md — 챕터 학습 워크플로우](./GUIDE_WORKFLOW.md#챕터-학습-워크플로우-4단계)
 
@@ -62,21 +62,20 @@ npm test
 | Ch05 | Solidity 문법 (5-1/5-2/5-3) | 148 | `npm run test:ch05` |
 | Ch06 | OpenZeppelin 권한 | 18 | `npm run test:ch06` |
 | Ch07 | SimpleBank | 23 | `npm run test:ch07` |
-| Ch08 | ERC-20 직접 구현 | 11 | `npm run test:ch08` |
-| Ch09 | KRWCoin (OZ) | 32 | `npm run test:ch09` |
-| Ch10 | MyNFT (ERC-721) | 21 | `npm run test:ch10` |
-| Ch11 | ERC-1155 (11-1~11-4) | 49 | `npm run test:ch11` |
-| Ch12 | msg.sender/call/delegatecall | 6 | `npm run test:ch12` |
-| Ch13 | UUPS Proxy | 7 | `npm run test:ch13` |
-| Ch14 | Sepolia 배포 | — | `npm run deploy:ch14:sepolia` |
-| Ch15 | UUPS Upgrade | 5 | `npm run test:ch15` |
-| Ch16 | 취약점·방어 | 8 | `npm run test:ch16` |
-| Ch17 | Slither 정적 분석 | (외부) | `slither .` |
-| Ch18 | 감사 리포트 | 4 | `npm run test:ch18` |
-| Ch19 | 멀티시그 (EIP-712) | 8 | `npm run test:ch19` |
-| Ch20 | MultisigService + Travel Rule | 10 | `npm run test:ch20` |
-| Ch21 | 캡스톤 스타터 | 10 | `npm run test:ch21` |
-| **합계** | **44 컨트랙트 · 40 파일** | **466** | |
+| Ch08 | **ERC-20** (MyERC20 + KRWCoin) | 43 | `npm run test:ch08` |
+| Ch09 | **ERC-721** (MyNFT) | 21 | `npm run test:ch09` |
+| Ch10 | **ERC-1155** (5개 컨트랙트) | 49 | `npm run test:ch10` |
+| Ch11 | msg.sender/call/delegatecall | 6 | `npm run test:ch11` |
+| Ch12 | UUPS Proxy (EnterpriseNFTV1) | 7 | `npm run test:ch12` |
+| Ch13 | Sepolia 배포 | — | `npm run deploy:ch13:sepolia` |
+| Ch14 | UUPS Upgrade | 5 | `npm run test:ch14` |
+| Ch15 | 취약점·방어 | 8 | `npm run test:ch15` |
+| Ch16 | Slither 정적 분석 | (외부) | `slither .` |
+| Ch17 | 감사 리포트 | 4 | `npm run test:ch17` |
+| Ch18 | 멀티시그 (EIP-712) | 8 | `npm run test:ch18` |
+| Ch19 | MultisigService + Travel Rule | 10 | `npm run test:ch19` |
+| Ch20 | 캡스톤 스타터 | 10 | `npm run test:ch20` |
+| **합계** | **44 컨트랙트 · 40 파일** | **약 466** | |
 
 > 각 챕터별 컨트랙트 파일·배포 스크립트 상세: [GUIDE_WORKFLOW.md — 챕터별 코드 매핑](./GUIDE_WORKFLOW.md#챕터별-코드-매핑)
 
@@ -97,11 +96,11 @@ npm run deploy:chXX:local    # 배포
 
 # Sepolia 배포
 cp .env.example .env         # .env 편집: RPC · Private Key · Etherscan Key
-npm run deploy:ch14:sepolia
+npm run deploy:ch13:sepolia
 
 # UUPS 업그레이드
-npm run deploy:ch13:local            # V1 배포 (Proxy 주소 출력)
-PROXY_ADDRESS=0x... npm run upgrade:ch15   # V2 로 업그레이드
+npm run deploy:ch12:local            # V1 배포 (Proxy 주소 출력)
+PROXY_ADDRESS=0x... npm run upgrade:ch14   # V2 로 업그레이드
 
 # 정리
 npm run clean                # artifacts/cache 삭제
