@@ -81,15 +81,59 @@ describe("Ch10 — EnterpriseNFT (ERC-1155)", function () {
         await nft.encodeTokenId(2, 1),
       ];
       const amounts = [10, 20, 30];
-      await nft.connect(minter).mintBatch(alice.address, ids, amounts, "0x");
+      await nft.connect(minter)["mintBatch(address,uint256[],uint256[],bytes)"](alice.address, ids, amounts, "0x");
       expect(await nft.balanceOf(alice.address, ids[0])).to.equal(10);
       expect(await nft.balanceOf(alice.address, ids[2])).to.equal(30);
     });
 
     it("배열 길이 불일치 시 LengthMismatch", async function () {
       const { nft, minter, alice } = await loadFixture(deploy);
-      await expect(nft.connect(minter).mintBatch(alice.address, [1, 2], [10], "0x"))
+      await expect(nft.connect(minter)["mintBatch(address,uint256[],uint256[],bytes)"](alice.address, [1, 2], [10], "0x"))
         .to.be.revertedWithCustomError(nft, "LengthMismatch");
+    });
+  });
+
+  describe("mintBatch 오버로드 (여러 명에게 인덱스별 1:1)", function () {
+    it("각 인덱스별로 다른 tokenId 를 각자에게 발행", async function () {
+      const { nft, minter, alice, bob } = await loadFixture(deploy);
+      const [admin, , , , carol] = await ethers.getSigners();
+      const idSword  = await nft.encodeTokenId(1, 1);
+      const idShield = await nft.encodeTokenId(1, 2);
+      const idPotion = await nft.encodeTokenId(2, 1);
+      await nft.connect(minter)["mintBatch(address[],uint256[],uint256[])"](
+        [alice.address, bob.address, carol.address],
+        [idSword, idShield, idPotion],
+        [1, 1, 1]
+      );
+      expect(await nft.balanceOf(alice.address, idSword)).to.equal(1);
+      expect(await nft.balanceOf(bob.address,   idShield)).to.equal(1);
+      expect(await nft.balanceOf(carol.address, idPotion)).to.equal(1);
+    });
+
+    it("같은 tokenId 를 여러 명에게 뿌리기 (동일 배지 배포)", async function () {
+      const { nft, minter, alice, bob } = await loadFixture(deploy);
+      const [, , , , carol] = await ethers.getSigners();
+      const badge = await nft.encodeTokenId(9, 100);
+      await nft.connect(minter)["mintBatch(address[],uint256[],uint256[])"](
+        [alice.address, bob.address, carol.address],
+        [badge, badge, badge],
+        [1, 1, 1]
+      );
+      expect(await nft.balanceOf(alice.address, badge)).to.equal(1);
+      expect(await nft.balanceOf(bob.address,   badge)).to.equal(1);
+      expect(await nft.balanceOf(carol.address, badge)).to.equal(1);
+    });
+
+    it("세 배열 길이 불일치 시 LengthMismatch", async function () {
+      const { nft, minter, alice, bob } = await loadFixture(deploy);
+      const [, , , , carol] = await ethers.getSigners();
+      await expect(
+        nft.connect(minter)["mintBatch(address[],uint256[],uint256[])"](
+          [alice.address, bob.address, carol.address],
+          [1, 2],
+          [1, 1, 1]
+        )
+      ).to.be.revertedWithCustomError(nft, "LengthMismatch");
     });
   });
 
@@ -100,7 +144,7 @@ describe("Ch10 — EnterpriseNFT (ERC-1155)", function () {
         await nft.encodeTokenId(1, 1),
         await nft.encodeTokenId(1, 2),
       ];
-      await nft.connect(minter).mintBatch(alice.address, ids, [10, 20], "0x");
+      await nft.connect(minter)["mintBatch(address,uint256[],uint256[],bytes)"](alice.address, ids, [10, 20], "0x");
 
       await nft.connect(alice).safeBatchTransferFrom(
         alice.address, bob.address, ids, [3, 5], "0x"
