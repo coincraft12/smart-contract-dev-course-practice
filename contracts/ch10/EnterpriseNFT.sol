@@ -82,6 +82,28 @@ contract EnterpriseNFT is ERC1155, AccessControl, Pausable {
         }
     }
 
+    /**
+     * @dev 커스텀 오버로드 — 여러 명에게 인덱스별 1:1 발행.
+     *      to[i] 가 tokenIds[i] 를 amounts[i] 만큼 받음.
+     *      tokenIds 를 모두 같게 넣으면 "같은 종류 뿌리기",
+     *      각각 다르게 넣으면 "각자 다른 종류 지급".
+     *      실무 배치 크기 상한 ≈ 500건.
+     */
+    function mintBatch(
+        address[] memory to,
+        uint256[] memory tokenIds,
+        uint256[] memory amounts
+    ) external onlyRole(MINTER_ROLE) {
+        if (to.length != tokenIds.length || tokenIds.length != amounts.length) {
+            revert LengthMismatch();
+        }
+        for (uint256 i = 0; i < to.length; ) {
+            _mint(to[i], tokenIds[i], amounts[i], "");
+            emit TokenMinted(to[i], tokenIds[i], amounts[i]);
+            unchecked { ++i; }
+        }
+    }
+
     // ── URI 관리 ────────────────────────────────────
     function setURI(string memory newUri) external onlyRole(URI_SETTER_ROLE) {
         string memory old = super.uri(0);

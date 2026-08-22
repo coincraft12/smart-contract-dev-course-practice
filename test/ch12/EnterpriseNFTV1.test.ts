@@ -49,6 +49,40 @@ describe("Ch12-14 — EnterpriseNFTV1 (UUPS Proxy)", function () {
       await (proxy as any).connect(admin).mint(alice.address, tid, 10, "0x");
       expect(await (proxy as any).balanceOf(alice.address, tid)).to.equal(10);
     });
+
+    it("표준 mintBatch (한 명에게 여러 종류)", async function () {
+      const { proxy, admin, alice } = await loadFixture(deploy);
+      const id1 = await (proxy as any).encodeTokenId(1, 100);
+      const id2 = await (proxy as any).encodeTokenId(1, 101);
+      await (proxy as any).connect(admin)
+        ["mintBatch(address,uint256[],uint256[],bytes)"](
+          alice.address, [id1, id2], [5, 10], "0x"
+        );
+      expect(await (proxy as any).balanceOfBatch([alice.address, alice.address], [id1, id2]))
+        .to.deep.equal([5n, 10n]);
+    });
+
+    it("커스텀 mintBatch (여러 명에게 각각) — 이벤트 달성자 배포 시나리오", async function () {
+      const { proxy, admin, alice, bob } = await loadFixture(deploy);
+      const badge = await (proxy as any).encodeTokenId(2, 42);
+      await (proxy as any).connect(admin)
+        ["mintBatch(address[],uint256[],uint256[])"](
+          [alice.address, bob.address], [badge, badge], [1, 1]
+        );
+      expect(await (proxy as any).balanceOfBatch([alice.address, bob.address], [badge, badge]))
+        .to.deep.equal([1n, 1n]);
+    });
+
+    it("커스텀 mintBatch 세 배열 길이 불일치 → LengthMismatch", async function () {
+      const { proxy, admin, alice, bob } = await loadFixture(deploy);
+      const badge = await (proxy as any).encodeTokenId(2, 42);
+      await expect(
+        (proxy as any).connect(admin)
+          ["mintBatch(address[],uint256[],uint256[])"](
+            [alice.address, bob.address], [badge], [1, 1]
+          )
+      ).to.be.revertedWithCustomError(proxy as any, "LengthMismatch");
+    });
   });
 
   describe("프록시 구조 확인", function () {

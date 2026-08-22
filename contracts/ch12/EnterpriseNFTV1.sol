@@ -71,6 +71,9 @@ contract EnterpriseNFTV1 is
         emit TokenMinted(to, tokenId, amount);
     }
 
+    /**
+     * @dev 표준 wrapper — 한 명에게 여러 종류 발행 (OZ _mintBatch 활용)
+     */
     function mintBatch(
         address to,
         uint256[] memory tokenIds,
@@ -81,6 +84,25 @@ contract EnterpriseNFTV1 is
         _mintBatch(to, tokenIds, amounts, data);
         for (uint256 i = 0; i < tokenIds.length; ) {
             emit TokenMinted(to, tokenIds[i], amounts[i]);
+            unchecked { ++i; }
+        }
+    }
+
+    /**
+     * @dev 커스텀 오버로드 — 여러 명에게 각각 발행 (이벤트 달성자 배포 시나리오)
+     *      슬라이드 30·31·32 참고. 실무 배치 크기 상한 ≈ 500건.
+     */
+    function mintBatch(
+        address[] memory to,
+        uint256[] memory tokenIds,
+        uint256[] memory amounts
+    ) external onlyRole(MINTER_ROLE) {
+        if (to.length != tokenIds.length || tokenIds.length != amounts.length) {
+            revert LengthMismatch();
+        }
+        for (uint256 i = 0; i < to.length; ) {
+            _mint(to[i], tokenIds[i], amounts[i], "");
+            emit TokenMinted(to[i], tokenIds[i], amounts[i]);
             unchecked { ++i; }
         }
     }
