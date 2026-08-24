@@ -6,20 +6,20 @@ pragma solidity ^0.8.20;
  * @dev Ch11 실습 파일 ① (강의자료 슬라이드 20 참조)
  *
  * ── 학습 목표 ────────────────────────────────────────────────
- *   1) 같은 Callee 를 call 로도 delegatecall 로도 불러 보고
+ *   1) 같은 B 를 A 가 call 로도 delegatecall 로도 불러 보고
  *      msg.sender / storage 가 어디에 기록되는지 눈으로 확인한다.
  *   2) 저수준 call 의 반환값 ok 를 무시하면 어떻게 되는지 관찰한다.
  *
  * ── 핵심 대조 (강의자료 슬라이드 11) ─────────────────────────
- *   구분            실행 storage      msg.sender        tx.origin
- *   call            Callee (피호출)   Caller 주소       최초 EOA
- *   delegatecall    Caller (호출자)   최초 EOA          최초 EOA
+ *   구분            실행 storage   msg.sender    tx.origin
+ *   call            B (피호출)     A 주소        최초 EOA
+ *   delegatecall    A (호출자)     최초 EOA      최초 EOA
  *
  *   tx.origin 은 call/delegatecall 무관하게 항상 최초 EOA.
  *   msg.sender 는 직전 호출자로 매 단계마다 바뀐다.
  */
 
-contract Callee {
+contract BContract {
     uint256 public value;   // 슬롯 0
     address public sender;  // 슬롯 1
     address public origin;  // 슬롯 2
@@ -32,38 +32,38 @@ contract Callee {
 
     // 항상 실패하는 함수 — 저수준 call 의 ok 반환값 관찰용
     function alwaysRevert() public pure {
-        revert("Callee: intentional revert");
+        revert("BContract: intentional revert");
     }
 }
 
-contract Caller {
-    // ⚠️ Callee 와 동일한 슬롯 배치 — delegatecall 정확성의 전제.
+contract AContract {
+    // ⚠️ B 와 동일한 슬롯 배치 — delegatecall 정확성의 전제.
     //    (다음 슬라이드에서 이 전제를 일부러 깬 SlotCollision 을 본다.)
     uint256 public value;   // 슬롯 0
     address public sender;  // 슬롯 1
     address public origin;  // 슬롯 2
 
-    address public calleeAddr;
+    address public bAddr;
 
-    constructor(address _callee) {
-        calleeAddr = _callee;
+    constructor(address _b) {
+        bAddr = _b;
     }
 
-    /// delegatecall — Callee 코드를 Caller 의 context 에서 실행
-    ///   storage    → Caller 에 기록 ★
+    /// delegatecall — B 의 코드를 A 의 context 에서 실행
+    ///   storage    → A 에 기록 ★
     ///   msg.sender → 원래 EOA 유지
     function forwardDelegate(uint256 _value) public {
-        (bool ok, ) = calleeAddr.delegatecall(
+        (bool ok, ) = bAddr.delegatecall(
             abi.encodeWithSignature("setValue(uint256)", _value)
         );
         require(ok, "delegatecall failed");
     }
 
-    /// call — Callee 를 독립 컨트랙트로 호출
-    ///   storage    → Callee 자신에게 기록
-    ///   msg.sender → Caller 주소로 바뀐다
+    /// call — B 를 독립 컨트랙트로 호출
+    ///   storage    → B 자신에게 기록
+    ///   msg.sender → A 주소로 바뀐다
     function forwardCall(uint256 _value) public {
-        (bool ok, ) = calleeAddr.call(
+        (bool ok, ) = bAddr.call(
             abi.encodeWithSignature("setValue(uint256)", _value)
         );
         require(ok, "call failed");
@@ -71,7 +71,7 @@ contract Caller {
 
     /// 저수준 call 반환값 ok 를 require 로 검사하는 안전한 형태 (권장)
     function callChecked() public returns (bool) {
-        (bool ok, ) = calleeAddr.call(
+        (bool ok, ) = bAddr.call(
             abi.encodeWithSignature("alwaysRevert()")
         );
         require(ok, "external call failed");
@@ -83,7 +83,7 @@ contract Caller {
     bool public didRunAfter;
     function callIgnored() public {
         // solhint-disable-next-line
-        calleeAddr.call(abi.encodeWithSignature("alwaysRevert()"));
+        bAddr.call(abi.encodeWithSignature("alwaysRevert()"));
         // ↑ ok 를 검사하지 않는다. 실패해도 아래 줄이 실행된다.
         didRunAfter = true;
     }
