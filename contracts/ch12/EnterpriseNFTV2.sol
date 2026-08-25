@@ -5,7 +5,7 @@ import "../ch12/EnterpriseNFTV1.sol";
 
 /**
  * @title EnterpriseNFTV2 (Good upgrade)
- * @dev Ch14 실습 — 안전한 UUPS 업그레이드
+ * @dev Ch12 실습 — 안전한 UUPS 업그레이드
  *
  * ✅ 새 storage 변수는 반드시 v1 storage 뒤에 추가.
  *    v1의 변수 순서/타입 변경 금지.

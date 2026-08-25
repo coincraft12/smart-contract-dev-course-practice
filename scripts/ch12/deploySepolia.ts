@@ -8,7 +8,7 @@ import { ethers, upgrades, network, run } from "hardhat";
  *   2) 배포자 주소에 Sepolia ETH 확보 (https://sepoliafaucet.com/)
  *
  * ▶ 실행
- *   npx hardhat run scripts/ch14/deploySepolia.ts --network sepolia
+ *   npx hardhat run scripts/ch12/deploySepolia.ts --network sepolia
  */
 async function main() {
   if (network.name !== "sepolia") {

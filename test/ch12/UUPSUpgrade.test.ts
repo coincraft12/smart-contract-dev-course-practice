@@ -2,7 +2,7 @@ import { expect } from "chai";
 import { ethers, upgrades } from "hardhat";
 import { loadFixture, time } from "@nomicfoundation/hardhat-toolbox/network-helpers";
 
-describe("Ch14 — UUPS Upgrade (V1 → V2)", function () {
+describe("Ch12 — UUPS Upgrade (V1 → V2)", function () {
 
   const URI = "https://api.example.com/token/{id}.json";
 

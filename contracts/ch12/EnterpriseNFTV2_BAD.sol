@@ -9,7 +9,7 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 
 /**
  * @title EnterpriseNFTV2_BAD (❌ 스토리지 레이아웃 파괴)
- * @dev Ch14 실습 — 잘못된 업그레이드 예시
+ * @dev Ch12 실습 — 잘못된 업그레이드 예시
  *
  * ❌ 문제점: v1이 사용하던 slot 앞에 신규 storage 삽입
  *    → hardhat-upgrades가 자동 감지하여 배포 거부

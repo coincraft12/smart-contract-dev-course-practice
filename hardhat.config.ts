@@ -5,6 +5,7 @@ import { HardhatUserConfig } from "hardhat/config";
 import "@nomicfoundation/hardhat-toolbox";
 import "@nomicfoundation/hardhat-ignition-ethers";
 import "@openzeppelin/hardhat-upgrades";
+import 'hardhat-storage-layout';
 
 const config: HardhatUserConfig = {
   solidity: {
