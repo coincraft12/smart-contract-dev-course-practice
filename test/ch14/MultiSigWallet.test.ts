@@ -2,7 +2,7 @@ import { expect } from "chai";
 import { ethers } from "hardhat";
 import { loadFixture } from "@nomicfoundation/hardhat-toolbox/network-helpers";
 
-describe("Ch18 — MultiSigWallet (EIP-712, m-of-n)", function () {
+describe("Ch14 — MultiSigWallet (EIP-712, m-of-n)", function () {
 
   async function deploy() {
     const signers = await ethers.getSigners();

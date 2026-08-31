@@ -3,7 +3,7 @@ pragma solidity ^0.8.24;
 
 /**
  * @title AuditTarget
- * @dev Ch17 실습 — 감사(audit) 대상 컨트랙트 (의도적 취약점 포함)
+ * @dev Ch13 실습 — 감사(audit) 대상 컨트랙트 (의도적 취약점 포함)
  *
  * 학습자는 이 컨트랙트를 감사하고 아래 발견 항목들을 찾아 리포트를 작성한다.
  * 정답은 REPORT.md 참조.

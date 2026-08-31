@@ -24,11 +24,7 @@
     "test:ch10": "hardhat test test/ch10/MyERC1155.test.ts test/ch10/TokenStandardComparison.test.ts test/ch10/BatchOperations.test.ts test/ch10/TokenIdEncoding.test.ts test/ch10/EnterpriseNFT.test.ts test/ch10/BadgeSystemComparison.test.ts",
     "test:ch11": "hardhat test test/ch11/CallDemo.test.ts test/ch11/SlotCollision.test.ts",
     "test:ch12": "hardhat test test/ch12/EnterpriseNFTV1.test.ts test/ch12/UUPSUpgrade.test.ts",
-    "test:ch15": "hardhat test test/ch15/Reentrancy.test.ts test/ch15/TxOrigin.test.ts",
-    "test:ch17": "hardhat test test/ch17/AuditFindings.test.ts",
-    "test:ch18": "hardhat test test/ch18/MultiSigWallet.test.ts",
-    "test:ch19": "hardhat test test/ch19/MultisigService.test.ts",
-    "test:ch20": "hardhat test test/ch20/SoulBoundBadge.test.ts test/ch20/MerkleAirdrop.test.ts",
+    "test:ch15": "hardhat test test/ch15/MultisigService.test.ts",
     "node": "hardhat node",
     "deploy:ch04-2:local": "hardhat run scripts/ch04/4-2/deploySimpleStorage.ts --network localhost",
     "deploy:ch04-3:local": "hardhat ignition deploy ignition/modules/Lock.ts --network localhost",
@@ -48,7 +44,10 @@
     "interact:ch12:local": "hardhat run scripts/ch12/interactUUPS.ts --network localhost",
     "interact:ch12:sepolia": "hardhat run scripts/ch12/interactSepoliaUUPS.ts --network sepolia",
     "upgrade:ch12": "hardhat run scripts/ch12/upgradeToV2.ts --network localhost",
-    "clean": "hardhat clean"
+    "clean": "hardhat clean",
+    "test:ch13": "hardhat test test/ch13/Reentrancy.test.ts test/ch13/TxOrigin.test.ts test/ch13/AuditFindings.test.ts",
+    "test:ch14": "hardhat test test/ch14/MultiSigWallet.test.ts",
+    "test:ch16": "hardhat test test/ch16/SoulBoundBadge.test.ts test/ch16/MerkleAirdrop.test.ts"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-chai-matchers": "^2.1.2",

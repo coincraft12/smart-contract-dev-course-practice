@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 
 /**
  * @title MultiSigWallet
- * @dev Ch18 실습 — m-of-n 멀티시그 지갑 (EIP-712 오프체인 서명)
+ * @dev Ch14 실습 — m-of-n 멀티시그 지갑 (EIP-712 오프체인 서명)
  *
  * 학습 포인트:
  * - EIP-712 구조화된 서명 (도메인 분리 + 타입 해시)

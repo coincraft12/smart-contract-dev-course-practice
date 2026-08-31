@@ -2,7 +2,7 @@ import { expect } from "chai";
 import { ethers } from "hardhat";
 import { loadFixture } from "@nomicfoundation/hardhat-toolbox/network-helpers";
 
-describe("Ch15 — tx.origin 피싱 공격", function () {
+describe("Ch13 — tx.origin 피싱 공격", function () {
 
   async function deploy() {
     const [owner, attacker] = await ethers.getSigners();

@@ -2,7 +2,7 @@ import { expect } from "chai";
 import { ethers } from "hardhat";
 import { loadFixture } from "@nomicfoundation/hardhat-toolbox/network-helpers";
 
-describe("Ch20 — SoulBoundBadge (SBT)", function () {
+describe("Ch16 — SoulBoundBadge (SBT)", function () {
 
   async function deploy() {
     const [admin, issuer, alice, bob] = await ethers.getSigners();

@@ -2,7 +2,7 @@ import { expect } from "chai";
 import { ethers } from "hardhat";
 import { loadFixture } from "@nomicfoundation/hardhat-toolbox/network-helpers";
 
-describe("Ch20 — MerkleAirdrop", function () {
+describe("Ch16 — MerkleAirdrop", function () {
 
   // 오프체인에서 준비된 화이트리스트로 Merkle root 생성
   function leaf(addr: string, amount: bigint): string {
