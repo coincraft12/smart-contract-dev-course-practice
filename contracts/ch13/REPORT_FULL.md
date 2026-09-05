@@ -330,7 +330,7 @@ STRIDE 모델로 위협을 분류하여 각 위협에 대응하는 컨트롤 (Co
 | **SWC** | SWC-101 (Integer Arithmetic — division-by-zero) |
 | **CWE** | CWE-369 (Divide By Zero) |
 | **CVSS 3.1 Base Score** | **6.5 (Medium)** · Vector: `AV:N/AC:L/PR:H/UI:N/S:C/C:N/I:N/A:H` |
-| **위치** | `AuditTarget.sol:59-64` (`updatePrice`) |
+| **위치** | `AuditTarget.sol:64-69` (`updatePrice`) |
 | **Status** | ✅ Fixed (v1.1 클라이언트 fix → v1.2 재검증 완료) |
 
 **Description**
@@ -602,7 +602,7 @@ function buy() public payable {
 | **SWC** | SWC-N/A (Code Quality) |
 | **CWE** | CWE-1122 (Insufficient Adherence to Expected Conventions) |
 | **CVSS 3.1 Base Score** | **3.1 (Low)** · Vector: `AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:L/A:N` |
-| **위치** | `AuditTarget.sol:60, 66, 72` — `updatePrice`·`closeSale`·`withdraw` 세 곳 중복 |
+| **위치** | `AuditTarget.sol:65, 72, 78` — `updatePrice`·`closeSale`·`withdraw` 세 곳 중복 |
 | **Status** | ✅ Fixed |
 
 **Description**

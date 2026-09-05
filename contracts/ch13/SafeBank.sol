@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
 /**
  * @title SafeBank
- * @dev Ch08 실습 — 재진입 공격을 방어한 안전한 은행
+ * @dev Ch13 실습 — 재진입 공격을 방어한 안전한 은행 (Ch08에서 도입 후 Ch13 보안 감사에서 재사용)
  *
  * VulnerableBank와 비교해서 배울 것:
  * 1. CEI 패턴 (Checks-Effects-Interactions) — 상태 먼저, 전송 나중

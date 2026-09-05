@@ -5,7 +5,7 @@ import "./VulnerableBank.sol";
 
 /**
  * @title Attacker
- * @dev Ch08 실습 — 재진입 공격 시연 컨트랙트 (교육용)
+ * @dev Ch13 실습 — 재진입 공격 시연 컨트랙트 (교육용, Ch08에서 도입 후 Ch13에서 재사용)
  *
  * ⚠️  이 컨트랙트는 취약점 시연 목적으로만 사용.
  *

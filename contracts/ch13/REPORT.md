@@ -73,7 +73,7 @@ Impact × Likelihood 곱으로 등급을 산정한다 (감으로 매기지 않�
   - Impact: 판매 함수 `buy()`가 영구 revert → 서비스 완전 중단
   - Likelihood: 권한 필요(`owner`)이나 실수·오조작으로 언제든 트리거 가능
 - **SWC**: SWC-101 (Integer Arithmetic — division-by-zero)
-- **위치**: `AuditTarget.sol:59-64` (`updatePrice`)
+- **위치**: `AuditTarget.sol:64-69` (`updatePrice`)
 - **공격 시나리오**:
   ```solidity
   target.updatePrice(0);                     // owner의 실수 or 악의
@@ -172,7 +172,7 @@ Impact × Likelihood 곱으로 등급을 산정한다 (감으로 매기지 않�
   - Impact: 코드 품질·유지보수성 이슈. 직접 자금 손실 없음
   - Likelihood: 향후 함수 추가 시 `require(msg.sender == owner)` 를 실수로 빠뜨릴 여지
 - **SWC**: SWC-N/A (Code Quality)
-- **위치**: `AuditTarget.sol:60, 66, 72` (`updatePrice`·`closeSale`·`withdraw` 세 곳 반복)
+- **위치**: `AuditTarget.sol:65, 72, 78` (`updatePrice`·`closeSale`·`withdraw` 세 곳 반복)
 - **설명**: 세 관리자 함수가 동일 `require`를 반복. modifier 추출로 단일 지점 관리가 표준.
 - **권장 수정**:
   ```solidity

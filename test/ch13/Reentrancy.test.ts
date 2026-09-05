@@ -3,7 +3,7 @@ import { ethers } from "hardhat";
 import { loadFixture } from "@nomicfoundation/hardhat-toolbox/network-helpers";
 
 /**
- * Ch08 — 재진입 공격 시연
+ * Ch13 — 재진입 공격 시연 (Ch08에서 도입, Ch13 보안 감사 실습에서 재사용)
  *
  * 이 테스트는 두 가지를 검증한다:
  * 1. VulnerableBank는 재진입 공격에 취약 → 공격 성공
