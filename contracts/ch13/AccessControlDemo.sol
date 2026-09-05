@@ -5,76 +5,49 @@ import "@openzeppelin/contracts/access/AccessControl.sol";
 
 /**
  * @title AccessControlDemo
- * @dev Ch13 실습 — 접근 제어 실수 시연 (교육용)
+ * @dev Ch13 실습 — 접근 제어 실수 (대본 13-1 슬라이드 14 대응)
  *
- * 대본 13-1 슬라이드 13~15 대응:
- *   "열려 있는 문으로 걸어 들어간다"
- *   세 가지 유형 중 (1) 미보호 함수 + (2) 방어 대비를 나란히 배치.
+ * 슬라이드 원문 코드 매칭:
+ *   ❌ function setAdmin(address newAdmin) public { admin = newAdmin; }       // 취약
+ *   ✅ function setAdmin(address newAdmin) external onlyRole(DEFAULT_ADMIN_ROLE) { ... }   // 방어
  *
- * ❌ VulnerableAccess: 관리자 함수에 권한 검사가 아예 없다 (누구나 호출 가능)
- * ✅ SafeAccess: OpenZeppelin AccessControl + onlyRole 로 방어
+ * 유형 1 (미인증 함수) 만 실습으로 다룬다.
+ * 유형 2 (초기화 미보호) 는 Ch12 UUPS 강의에서 다루었고, 유형 3 (중앙화) 는 운영 구조 문제이므로 코드 실습 대상이 아니다.
  *
  * ⚠️  이 컨트랙트는 취약점 시연 목적으로만 사용. 실제 사용 금지.
  */
 
-// ❌ 취약: 관리자만 부를 수 있어야 할 함수에 권한 검사가 없다
+// ❌ 취약: setAdmin 에 modifier 가 없음 → 누구나 자기를 관리자로 지정 가능
 contract VulnerableAccess {
-    address public owner;
-    uint256 public treasury;
+    address public admin;
 
-    event OwnerChanged(address indexed oldOwner, address indexed newOwner);
-    event Withdrawn(address indexed to, uint256 amount);
+    event AdminChanged(address indexed oldAdmin, address indexed newAdmin);
 
-    constructor() payable {
-        owner = msg.sender;
-        treasury = msg.value;
+    constructor() {
+        admin = msg.sender;
     }
 
-    // ❌ 권한 검사 없음 — 누구나 owner 변경 가능
-    function setOwner(address newOwner) external {
-        emit OwnerChanged(owner, newOwner);
-        owner = newOwner;
-    }
-
-    // ❌ 권한 검사 없음 — 누구나 자금 인출 가능
-    function withdraw(address payable to, uint256 amount) external {
-        require(amount <= treasury, "insufficient");
-        treasury -= amount;
-        (bool ok, ) = to.call{value: amount}("");
-        require(ok, "transfer failed");
-        emit Withdrawn(to, amount);
-    }
-
-    receive() external payable {
-        treasury += msg.value;
+    // ❌ public 무제한 — 대본 슬라이드 14의 왼쪽 코드
+    function setAdmin(address newAdmin) public {
+        emit AdminChanged(admin, newAdmin);
+        admin = newAdmin;
     }
 }
 
-// ✅ 안전: OpenZeppelin AccessControl 로 역할 기반 방어
+// ✅ 안전: OpenZeppelin AccessControl + DEFAULT_ADMIN_ROLE 로 방어
 contract SafeAccess is AccessControl {
-    bytes32 public constant TREASURER_ROLE = keccak256("TREASURER_ROLE");
+    address public admin;
 
-    uint256 public treasury;
+    event AdminChanged(address indexed oldAdmin, address indexed newAdmin);
 
-    event Withdrawn(address indexed to, uint256 amount);
-
-    constructor() payable {
+    constructor() {
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
-        _grantRole(TREASURER_ROLE, msg.sender);
-        treasury = msg.value;
+        admin = msg.sender;
     }
 
-    // ✅ DEFAULT_ADMIN_ROLE 만 신규 역할 부여 가능 (AccessControl 기본 동작)
-    // ✅ TREASURER_ROLE 만 인출 가능
-    function withdraw(address payable to, uint256 amount) external onlyRole(TREASURER_ROLE) {
-        require(amount <= treasury, "insufficient");
-        treasury -= amount;
-        (bool ok, ) = to.call{value: amount}("");
-        require(ok, "transfer failed");
-        emit Withdrawn(to, amount);
-    }
-
-    receive() external payable {
-        treasury += msg.value;
+    // ✅ onlyRole(DEFAULT_ADMIN_ROLE) 한 줄로 열린 문을 잠근다 — 대본 슬라이드 14의 오른쪽 코드
+    function setAdmin(address newAdmin) external onlyRole(DEFAULT_ADMIN_ROLE) {
+        emit AdminChanged(admin, newAdmin);
+        admin = newAdmin;
     }
 }
