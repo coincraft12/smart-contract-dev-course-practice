@@ -251,7 +251,7 @@ STRIDE 모델로 위협을 분류하여 각 위협에 대응하는 컨트롤 (Co
 |---|---|---|
 | 1 | **수동 코드 리뷰** | (1) CEI 패턴 준수 확인 (2) integer 연산 안전성 (3) access control 매트릭스 작성 (4) 상태 전이 그래프 도출 후 불변식 대조 |
 | 2 | **정적 분석** | Slither v0.11.6 `--exclude-dependencies` 실행 → 참고 결과 Appendix A. 자동 탐지가 잡지 못한 business logic 결함은 수동 리뷰에서 발견 |
-| 3 | **동적 테스트** | 발견 항목별 PoC 테스트 (`test/ch13/AuditFindings.test.ts`) 4건 · 회귀 방지용 재진입·tx.origin 테스트 (`Reentrancy.test.ts` 6건 + `TxOrigin.test.ts` 2건) 병행. **총 12건, 전부 pass 확인** (Hardhat 실행 시간 ~6s) |
+| 3 | **동적 테스트** | 발견 항목별 PoC 테스트 (`test/ch13/AuditFindings.test.ts`) 4건 · 회귀 방지용 재진입 (`Reentrancy.test.ts` 6건) · tx.origin (`TxOrigin.test.ts` 2건) · 접근 제어 (`AccessControl.test.ts` 4건) · 정수 오버플로 (`Overflow.test.ts` 2건) 병행. **총 18건, 전부 pass 확인** (Hardhat 실행 시간 ~1s) |
 | 4 | **Threat Modeling** | STRIDE 프레임워크 적용, 각 위협별 컨트롤 매핑 (§ 7) |
 | 5 | **재감사 (Remediation Verification)** | 클라이언트 fix 커밋 대상으로 (a) 원본 finding 재현 시나리오 실행 (b) 신규 회귀 검사 (c) 커버리지 재측정 |
 
@@ -691,10 +691,12 @@ v1.1 클라이언트 응답 수령 후, 감사팀은 다음 절차로 remediatio
 
 | 파일 | 케이스 수 | 실행 시간 | 결과 |
 |---|---:|---:|:-:|
-| `Reentrancy.test.ts` | 6 (VulnerableBank 3 + SafeBank 3) | ~2s | ✅ Pass |
-| `TxOrigin.test.ts` | 2 (직접 호출 방어 + 프록시 공격 재현) | ~1s | ✅ Pass |
-| `AuditFindings.test.ts` | 4 (H-01·H-02·M-01·M-02 PoC) | ~3s | ✅ Pass |
-| **합계** | **12** | **~6s** | ✅ **All Pass** |
+| `Reentrancy.test.ts` | 6 (VulnerableBank 3 + SafeBank 3) | ~0.9s | ✅ Pass |
+| `TxOrigin.test.ts` | 2 (직접 호출 방어 + 프록시 공격 재현) | ~0.1s | ✅ Pass |
+| `AccessControl.test.ts` | 4 (VulnerableAccess 2 + SafeAccess 2) | ~0.1s | ✅ Pass |
+| `Overflow.test.ts` | 2 (VulnerableOverflow 1 + SafeOverflow 1) | ~0.1s | ✅ Pass |
+| `AuditFindings.test.ts` | 4 (H-01·H-02·M-01·M-02 PoC) | ~0.1s | ✅ Pass |
+| **합계** | **18** | **~1.3s** | ✅ **All Pass** |
 
 ### 14.2 Statement/Branch Coverage (v1.2)
 
@@ -812,7 +814,7 @@ $ npx hardhat test test/ch13/
     ✔ M-01. 나머지 wei는 컨트랙트에 잔류하고 사용자에게 tokens 증분 없음
     ✔ M-02. raised가 goal을 넘어도 saleClosed=false 유지
 
-  12 passing (6s)
+  18 passing (1s)
 ```
 
 ---
