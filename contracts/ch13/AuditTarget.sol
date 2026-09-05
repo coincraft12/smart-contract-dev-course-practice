@@ -51,9 +51,14 @@ contract AuditTarget {
         emit Bought(msg.sender, amount, msg.value);
     }
 
+    // ❌ H-02 실 취약점: receive()가 buy()를 우회하고 상태를 직접 변경
+    //   → buy()의 saleClosed 게이트를 통과하지 않음 → 판매 종료 후에도 tokens·raised 증가 (회계 오염)
     receive() external payable {
-        // ← saleClosed 체크 누락 — 판매 종료 후에도 ETH 수신
-        buy();
+        require(msg.value > 0, "no eth");
+        uint256 amount = msg.value / tokenPrice;
+        tokens[msg.sender] += amount;
+        raised += msg.value;
+        emit Bought(msg.sender, amount, msg.value);
     }
 
     function updatePrice(uint256 newPrice) external {

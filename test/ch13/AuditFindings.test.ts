@@ -28,24 +28,24 @@ describe("Ch13 — AuditTarget findings PoC", function () {
   });
 
   describe("H-02. receive() bypasses saleClosed", function () {
-    it("sale 종료 후에도 receive()로 ETH가 들어와 tokens가 증가", async function () {
-      const { target, owner, alice } = await loadFixture(deploy);
+    it("sale 종료 후에도 receive()로 ETH가 들어와 tokens·raised가 증가 (회계 오염)", async function () {
+      const { target, owner, alice, price } = await loadFixture(deploy);
       await target.connect(owner).closeSale();
 
-      // buy()는 revert
+      // buy()는 saleClosed 게이트로 방어됨
       await expect(target.connect(alice).buy({ value: ethers.parseEther("1") }))
         .to.be.revertedWith("sale closed");
 
-      // 그러나 receive() 경로도 buy()를 호출하므로 동일하게 revert됨
-      // (실제 취약점은 만약 receive에서 buy()를 우회하는 로직이 있었다면 문제 — 현재 파일은
-      //  buy()를 호출하니 실제로는 방어됨. 이 테스트는 receive가 buy()를 그대로 호출한다는
-      //  사실을 검증하는 회귀 테스트로 남긴다.)
-      await expect(
-        alice.sendTransaction({
-          to: await target.getAddress(),
-          value: ethers.parseEther("1"),
-        })
-      ).to.be.revertedWith("sale closed");
+      // 그러나 receive()는 buy()를 우회하고 상태를 직접 변경 → 판매 종료 후에도 매입 성립
+      const paid = price * 3n;
+      await alice.sendTransaction({
+        to: await target.getAddress(),
+        value: paid,
+      });
+
+      expect(await target.tokens(alice.address)).to.equal(3);
+      expect(await target.raised()).to.equal(paid);
+      expect(await target.saleClosed()).to.be.true; // 종료 상태 유지되지만 자금 유입은 계속됨
     });
   });
 
