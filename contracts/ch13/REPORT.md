@@ -205,10 +205,10 @@ Impact × Likelihood 곱으로 등급을 산정한다 (감으로 매기지 않�
 |---|---|
 | **수동 코드 리뷰** | CEI 패턴 · integer 연산 · access control 매트릭스 · 상태 전이 그래프 작성 후 대조 |
 | **정적 분석** | Slither `--exclude-dependencies` (`practice/scripts/ch13/run_slither.md` 참조) — 참고 결과는 부록 A |
-| **동적 테스트** | Hardhat + Chai · 발견 항목별 PoC 테스트 (`test/ch13/AuditFindings.test.ts`) 4건 · 회귀 방지용 재진입 (`Reentrancy.test.ts` 6건) · tx.origin (`TxOrigin.test.ts` 2건) · 접근 제어 (`AccessControl.test.ts` 4건) · 정수 오버플로 (`Overflow.test.ts` 2건) 병행 |
-| **퍼즈 (선택)** | Foundry 도입 시 `updatePrice(uint256)` · `buy(uint256)` 인자에 vm.assume 걸어 경계값 탐색 권장 |
+| **동적 테스트** | Hardhat + Chai · 발견 항목별 PoC 테스트 (`test/ch13/AuditFindings.test.ts`) 4건 · 회귀 방지용 재진입 (`Reentrancy.test.ts` 6건) · tx.origin (`TxOrigin.test.ts` 2건) · 접근 제어 (`AccessControl.test.ts` 5건) 병행 |
+| **퍼즈** | Foundry 미도입이므로 Hardhat 반복문 방식으로 흉내 (`Fuzz.test.ts` 2건, 100·50회 반복). Foundry 도입 시 `vm.assume` 기반 정통 fuzz 로 격상 권장 |
 
-**총 실행 테스트**: 18건 (전부 통과) — `npx hardhat test test/ch13/`.
+**총 실행 테스트**: 19건 (전부 통과) — 개별 파일 명시 실행 (hardhat + mocha 조합에서 폴더 지정은 오류 발생).
 
 ---
 
@@ -223,9 +223,9 @@ Impact × Likelihood 곱으로 등급을 산정한다 (감으로 매기지 않�
 - `AuditFindings.test.ts` — H-01·H-02·M-01·M-02 PoC 각 1건 (총 4건)
 - `Reentrancy.test.ts` — 6건 (`VulnerableBank` 3 취약 · `SafeBank` 3 방어)
 - `TxOrigin.test.ts` — 2건 (직접 호출 방어 · 프록시 공격 재현)
-- `AccessControl.test.ts` — 4건 (`VulnerableAccess` 2 취약 · `SafeAccess` 2 방어)
-- `Overflow.test.ts` — 2건 (`VulnerableOverflow` unchecked 언더플로 · `SafeOverflow` 자동 revert)
-- 총 18건 (전부 통과, ~1s)
+- `AccessControl.test.ts` — 5건 (AuditTarget 배포 · updatePrice/closeSale/withdraw 권한 없는 자 revert 3건 · owner 대조군 1건 · closeSale 후 buy revert 1건)
+- `Fuzz.test.ts` — 2건 (buy 100회 무작위 amount 불변식 유지 · updatePrice 50회 무작위 newPrice 정상 반영)
+- 총 19건 (전부 통과, ~1s)
 
 ### C. SWC 미분류 항목 안내
 
