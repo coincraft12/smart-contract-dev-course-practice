@@ -1,0 +1,28 @@
+# Foundry 설정 — Ch13 fuzz 테스트용 (Hardhat 프로젝트에 통합)
+#
+# Hardhat 은 test/ 폴더의 .ts 파일만 mocha 로 로드하고, Foundry 는 같은 폴더의 .t.sol
+# 파일을 forge test 로 로드한다. 두 도구가 확장자로 분리되어 상호 간섭 없이 공존한다.
+#
+# 실행:
+#   forge test --match-path test/ch13/Fuzz.t.sol -vv           # Fuzz 테스트만
+#   forge test --match-path test/ch13/Fuzz.t.sol --fuzz-runs 10000 -vv   # 정밀 실행
+
+[profile.default]
+src = "contracts"
+out = "out"
+libs = ["lib", "node_modules"]
+test = "test"
+solc_version = "0.8.24"
+evm_version = "cancun"
+optimizer = true
+optimizer_runs = 200
+remappings = [
+    "forge-std/=lib/forge-std/src/",
+    "@openzeppelin/contracts/=node_modules/@openzeppelin/contracts/",
+    "@openzeppelin/contracts-upgradeable/=node_modules/@openzeppelin/contracts-upgradeable/",
+]
+
+# Fuzz 설정
+[fuzz]
+runs = 256                          # 각 fuzz 테스트당 무작위 입력 시도 횟수
+max_test_rejects = 65536

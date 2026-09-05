@@ -206,9 +206,9 @@ Impact × Likelihood 곱으로 등급을 산정한다 (감으로 매기지 않�
 | **수동 코드 리뷰** | CEI 패턴 · integer 연산 · access control 매트릭스 · 상태 전이 그래프 작성 후 대조 |
 | **정적 분석** | Slither `--exclude-dependencies` (`practice/scripts/ch13/run_slither.md` 참조) — 참고 결과는 부록 A |
 | **동적 테스트** | Hardhat + Chai · 발견 항목별 PoC 테스트 (`test/ch13/AuditFindings.test.ts`) 4건 · 회귀 방지용 재진입 (`Reentrancy.test.ts` 6건) · tx.origin (`TxOrigin.test.ts` 2건) · 접근 제어 (`AccessControl.test.ts` 5건) 병행 |
-| **퍼즈** | Foundry 미도입이므로 Hardhat 반복문 방식으로 흉내 (`Fuzz.test.ts` 2건, 100·50회 반복). Foundry 도입 시 `vm.assume` 기반 정통 fuzz 로 격상 권장 |
+| **퍼즈** | Foundry fuzz (`forge test --match-path test/ch13/Fuzz.t.sol`) — `vm.assume` 기반 무작위 입력, 함수 3개(buy 불변식 · updatePrice postcondition · non-owner negative invariant), 각 256 runs 자동 실행 |
 
-**총 실행 테스트**: 19건 (전부 통과) — 개별 파일 명시 실행 (hardhat + mocha 조합에서 폴더 지정은 오류 발생).
+**총 실행 테스트**: Hardhat 17건 + Foundry fuzz 3함수(각 256 runs) — 전부 통과. Hardhat 은 개별 파일 명시 실행 (mocha 폴더 지정 오류 방지), Foundry 는 `.t.sol` 확장자 자동 매칭.
 
 ---
 
@@ -224,8 +224,8 @@ Impact × Likelihood 곱으로 등급을 산정한다 (감으로 매기지 않�
 - `Reentrancy.test.ts` — 6건 (`VulnerableBank` 3 취약 · `SafeBank` 3 방어)
 - `TxOrigin.test.ts` — 2건 (직접 호출 방어 · 프록시 공격 재현)
 - `AccessControl.test.ts` — 5건 (AuditTarget 배포 · updatePrice/closeSale/withdraw 권한 없는 자 revert 3건 · owner 대조군 1건 · closeSale 후 buy revert 1건)
-- `Fuzz.test.ts` — 2건 (buy 100회 무작위 amount 불변식 유지 · updatePrice 50회 무작위 newPrice 정상 반영)
-- 총 19건 (전부 통과, ~1s)
+- `Fuzz.t.sol` (Foundry) — 3함수 각 256 runs (buy 불변식 유지 · updatePrice postcondition · non-owner negative invariant)
+- 총 Hardhat 17건 + Foundry fuzz 3함수 × 256 runs = 785 실행 (전부 통과)
 
 ### C. SWC 미분류 항목 안내
 

@@ -251,7 +251,8 @@ STRIDE 모델로 위협을 분류하여 각 위협에 대응하는 컨트롤 (Co
 |---|---|---|
 | 1 | **수동 코드 리뷰** | (1) CEI 패턴 준수 확인 (2) integer 연산 안전성 (3) access control 매트릭스 작성 (4) 상태 전이 그래프 도출 후 불변식 대조 |
 | 2 | **정적 분석** | Slither v0.11.6 `--exclude-dependencies` 실행 → 참고 결과 Appendix A. 자동 탐지가 잡지 못한 business logic 결함은 수동 리뷰에서 발견 |
-| 3 | **동적 테스트** | 발견 항목별 PoC 테스트 (`test/ch13/AuditFindings.test.ts`) 4건 · 회귀 방지용 재진입 (`Reentrancy.test.ts` 6건) · tx.origin (`TxOrigin.test.ts` 2건) · 접근 제어 (`AccessControl.test.ts` 5건, AuditTarget 배포) · Fuzz (`Fuzz.test.ts` 2건, Hardhat 반복문 방식) 병행. **총 19건, 전부 pass 확인** (Hardhat 실행 시간 ~1s) |
+| 3 | **동적 테스트** | 발견 항목별 PoC 테스트 (`test/ch13/AuditFindings.test.ts`) 4건 · 회귀 방지용 재진입 (`Reentrancy.test.ts` 6건) · tx.origin (`TxOrigin.test.ts` 2건) · 접근 제어 (`AccessControl.test.ts` 5건, AuditTarget 배포) 병행. **Hardhat 총 17건, 전부 pass 확인** (~1s) |
+| 3b | **퍼즈 테스트** | Foundry fuzz (`test/ch13/Fuzz.t.sol`) — 함수 3개(buy 불변식 · updatePrice postcondition · non-owner negative invariant), `vm.assume`/`vm.prank`/`vm.deal` 기반, 각 256 runs (`--fuzz-runs 10000` 로 정밀 실행 가능). **3함수 × 256 runs = 768 실행 전부 pass** |
 | 4 | **Threat Modeling** | STRIDE 프레임워크 적용, 각 위협별 컨트롤 매핑 (§ 7) |
 | 5 | **재감사 (Remediation Verification)** | 클라이언트 fix 커밋 대상으로 (a) 원본 finding 재현 시나리오 실행 (b) 신규 회귀 검사 (c) 커버리지 재측정 |
 
@@ -260,17 +261,19 @@ STRIDE 모델로 위협을 분류하여 각 위협에 대응하는 컨트롤 (Co
 | 도구 | 버전 | 용도 |
 |---|---|---|
 | Slither | v0.11.6 | 정적 취약점 탐지 |
-| Hardhat | 2.22.x | 배포·테스트 프레임워크 |
+| Hardhat | 2.22.x | 배포·테스트 프레임워크 (단위·통합) |
+| Foundry (forge) | v1.7.x | Fuzz 테스트 (`vm.assume` · runs 256+) |
+| forge-std | latest | Foundry 표준 라이브러리 (Test·cheatcodes) |
 | solc | 0.8.24 | 컴파일러 |
-| Chai + Mocha | 4.x · 10.x | 테스트 어서션·러너 |
+| Chai + Mocha | 4.x · 10.x | Hardhat 테스트 어서션·러너 |
 
 ### 9.4 Not Used (사유 명시)
 
 | 도구 | 미사용 사유 |
 |---|---|
-| Foundry `forge test --fuzz-runs` | 본 감사 범위·기간상 정적+수동으로 충분. 프로덕션 확장 시 도입 권장 (§ 15) |
 | Certora Prover | 형식 검증 도구, 본 컨트랙트 규모 대비 오버엔지니어링 |
 | Manticore·Mythril | 심볼릭 실행, Slither가 잡은 항목과 중복도 높음 |
+| Foundry invariant testing (`invariant_*`) | 다중 액터 상태 머신 fuzz. 본 감사 범위에서는 단일 함수 fuzz(`testFuzz_*`) 로 충분. 프로덕션 확장 시 도입 권장 (§ 15) |
 
 ---
 
@@ -694,9 +697,10 @@ v1.1 클라이언트 응답 수령 후, 감사팀은 다음 절차로 remediatio
 | `Reentrancy.test.ts` | 6 (VulnerableBank 3 + SafeBank 3) | ~0.9s | ✅ Pass |
 | `TxOrigin.test.ts` | 2 (직접 호출 방어 + 프록시 공격 재현) | ~0.1s | ✅ Pass |
 | `AccessControl.test.ts` | 5 (AuditTarget 배포 · 권한없는자 3 + owner 대조군 1 + closeSale 후 buy 1) | ~0.1s | ✅ Pass |
-| `Fuzz.test.ts` | 2 (buy 100회 · updatePrice 50회 무작위 대입) | ~0.3s | ✅ Pass |
 | `AuditFindings.test.ts` | 4 (H-01·H-02·M-01·M-02 PoC) | ~0.1s | ✅ Pass |
-| **합계** | **19** | **~1.5s** | ✅ **All Pass** |
+| **Hardhat 소계** | **17** | **~1.2s** | ✅ **All Pass** |
+| `Fuzz.t.sol` (Foundry) | 3 함수 × 256 runs = 768 실행 (buy 불변식 · updatePrice postcondition · non-owner negative invariant) | ~0.05s | ✅ Pass |
+| **총합** | **Hardhat 17 + Foundry 3 fuzz 함수** | **~1.3s** | ✅ **All Pass** |
 
 ### 14.2 Statement/Branch Coverage (v1.2)
 
@@ -715,9 +719,17 @@ v1.1 클라이언트 응답 수령 후, 감사팀은 다음 절차로 remediatio
 
 ### 14.3 Fuzz Testing
 
-본 감사에서는 Foundry fuzz 를 사용하지 않았다. 프로덕션 확장 시 다음을 권장 (§ 15):
-- `updatePrice(uint256 newPrice)` — `vm.assume(newPrice > 0)` 로 경계값 탐색
-- `buy(uint256 amount)` — `vm.assume(amount > 0 && amount < type(uint256).max / tokenPrice)` 로 overflow 경계 탐색
+본 감사는 Foundry fuzz (`forge test`) 를 사용했다. `test/ch13/Fuzz.t.sol` 에 다음 세 property 를 정의:
+
+| 함수 | 성질 | Assume / Precondition | Assertion |
+|---|---|---|---|
+| `testFuzz_BuyMaintainsInvariants(uint96 paid)` | buy 정수 나눗셈 불변식 | `paid > 0 && paid < 100 ether` | `tokens == paid / PRICE` · `raised == paid` · `credit * PRICE ≤ paid` |
+| `testFuzz_UpdatePrice(uint256 newPrice)` | owner 호출 postcondition | `newPrice > 0` | `tokenPrice == newPrice` |
+| `testFuzz_UpdatePriceRevertsForNonOwner(address caller, uint256 newPrice)` | 권한 negative invariant | `caller != owner && newPrice > 0` | `expectRevert("not owner")` |
+
+실행: `forge test --match-path test/ch13/Fuzz.t.sol -vv` (256 runs 기본). CI/야간 배치용 정밀 실행은 `--fuzz-runs 10000` 권장. 프로덕션 확장 시 다음을 추가 권장 (§ 15):
+- 다중 액터 상태 머신 fuzz (`invariant_*` 함수) — 여러 EOA 가 무작위 순서로 buy·updatePrice·closeSale·withdraw 호출 시 총 raised·컨트랙트 balance·tokens 합계 불변식이 유지되는지
+- `buy(uint256 amount)` — `vm.assume(amount > 0 && amount < type(uint256).max / tokenPrice)` 로 overflow 경계 확장 탐색
 
 ---
 

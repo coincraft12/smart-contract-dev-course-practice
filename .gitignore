@@ -7,3 +7,8 @@ coverage
 coverage.json
 .openzeppelin/
 .backups/
+
+# Foundry
+lib/
+out/
+cache_forge/
